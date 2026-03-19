@@ -1,0 +1,2187 @@
+<!-- ============================================
+     QBSkin Mobile Suite — Task Management
+     Part of: QuickBase Mobile Skin Build
+     Version: 1.0
+     Last Updated: 2026-03-10
+     ============================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Tasks - QBSkin Mobile</title>
+    <style>
+        /* ============================================
+           ROOT & RESET
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* QBSkin Palette */
+            --primary: #1a5632;
+            --primary-light: #2a7a4a;
+            --warm: #cec4bc;
+            --warm-light: #e8e2dc;
+            --warm-lighter: #f7f3f0;
+            --text: #2c2420;
+            --text-muted: #8a7e76;
+            --border: #e0d8d1;
+
+            /* Status Colors */
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+
+            /* Spacing & Safe Areas */
+            --safe-top: env(safe-area-inset-top, 0);
+            --safe-bottom: env(safe-area-inset-bottom, 0);
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        /* ============================================
+           LAYOUT
+           ============================================ */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            background: #1e293b;
+            color: #ffffff;
+            z-index: 100;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+
+        .header-spacer {
+            height: calc(56px + env(safe-area-inset-top, 0px));
+        }
+
+        .app-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            flex: 1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255,255,255,0.12);
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 20px;
+        }
+
+        .icon-btn:active {
+            background: var(--warm-light);
+            transform: scale(0.95);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: calc(76px + var(--safe-bottom) + 16px);
+            padding-top: calc(56px + env(safe-area-inset-top, 0px) + 16px);
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        /* ============================================
+           STATUS FILTER CHIPS
+           ============================================ */
+        .filter-chips-container {
+            flex-shrink: 0;
+            padding: 12px 16px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-chips-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .chip:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================
+           DATE FILTER
+           ============================================ */
+        .date-filter-container {
+            flex-shrink: 0;
+            padding: 12px 16px;
+            background: var(--warm-lighter);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .date-filter-label {
+            font-weight: 600;
+            color: var(--text);
+            flex-shrink: 0;
+        }
+
+        .date-filter-input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: #ffffff;
+            color: var(--text);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .date-preset-btns {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .date-preset-btn {
+            padding: 4px 8px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .date-preset-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .date-preset-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================
+           TASK CARD
+           ============================================ */
+        .task-card {
+            margin: 8px 16px;
+            padding: 12px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .task-card:active {
+            background: var(--warm-lighter);
+        }
+
+        .task-card.expanded {
+            background: var(--warm-lighter);
+        }
+
+        .task-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .task-customer-type {
+            flex: 1;
+        }
+
+        .task-customer-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .task-type {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .status-pill.open {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .status-pill.inprogress {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--purple);
+        }
+
+        .status-pill.completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-pill.overdue {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .status-pill.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .task-card-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .task-datetime {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .task-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        .task-tech {
+            font-size: 12px;
+            color: var(--text-muted);
+            flex: 1;
+        }
+
+        .task-status-chips {
+            display: flex;
+            gap: 6px;
+        }
+
+        .task-status-chip {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .task-status-chip.enroute {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .task-status-chip.arrived {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+
+        .task-status-chip.submitted {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        /* ============================================
+           EXPANDED TASK DETAILS
+           ============================================ */
+        .task-expanded-content {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .task-card.expanded .task-expanded-content {
+            display: block;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text);
+            width: 40%;
+        }
+
+        .detail-value {
+            color: var(--text-muted);
+            text-align: right;
+            flex: 1;
+        }
+
+        .detail-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .task-actions-expanded {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .action-btn.secondary {
+            background: var(--warm-light);
+            color: var(--text);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================
+           EMPTY STATE
+           ============================================ */
+        .empty-state {
+            padding: 60px 16px 0;
+            text-align: center;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-message {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           LOADING STATE
+           ============================================ */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--warm-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 40px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============================================
+           MODAL OVERLAY
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 999;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ============================================
+           CREATE TASK MODAL (Bottom Sheet)
+           ============================================ */
+        .modal-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 12px 12px 0 0;
+            display: none;
+            z-index: 1000;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-sheet.show {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            flex-shrink: 0;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text);
+            background: #ffffff;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(26, 86, 50, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .form-actions {
+            flex-shrink: 0;
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--warm-lighter);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:active {
+            transform: scale(0.98);
+        }
+
+        /* ============================================
+           INLINE NOTE EDITOR
+           ============================================ */
+        .note-editor {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--warm-lighter);
+            border-radius: 6px;
+        }
+
+        .note-editor.show {
+            display: block;
+        }
+
+        .note-textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            min-height: 60px;
+            margin-bottom: 8px;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .note-btn {
+            flex: 1;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .note-btn.save {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .note-btn.cancel {
+            background: #ffffff;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        /* ============================================
+           BOTTOM NAVIGATION
+           ============================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(64px + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: #ffffff;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 200;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+        }
+
+        .bottom-nav.hidden {
+            display: none;
+        }
+
+        .nav-item {
+            flex: 1;
+            height: 76px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-item.active {
+            color: #1e293b;
+        }
+
+        /* ============================================
+           VIEW STATE MANAGEMENT
+           ============================================ */
+        .view-panel {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 16px;
+            background: #ffffff;
+            padding-bottom: calc(76px + var(--safe-bottom) + 16px);
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        /* ============================================
+           TICKET DASHBOARD (Level 1)
+           ============================================ */
+        .ticket-group {
+            margin-bottom: 16px;
+        }
+
+        .ticket-group-header {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted, #64748b);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 0 6px;
+            border-bottom: 1px solid #e0d8d1;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ticket-group-header .count {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        .ticket-group-header.overdue {
+            color: #ef4444;
+        }
+
+        .ticket-group-header.today {
+            color: #f59e0b;
+        }
+
+        .ticket-dash-card {
+            background: white;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 8px;
+            border: 1px solid #e0d8d1;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .ticket-dash-card:active {
+            transform: scale(0.985);
+        }
+
+        .ticket-dash-card .ticket-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .ticket-dash-card .ticket-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .ticket-dash-card .ticket-meta .priority-high {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .ticket-dash-card .ticket-meta .priority-med {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .ticket-dash-card .ticket-due {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .ticket-dash-card .ticket-due.overdue {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        /* ============================================
+           TICKET DETAIL VIEW (Level 2)
+           ============================================ */
+        .ticket-detail-header {
+            background: #f7f3f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .ticket-detail-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .ticket-detail-desc {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .ticket-detail-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .ticket-detail-info .label {
+            color: #8a7e76;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .ticket-detail-info .value {
+            color: #2c2420;
+            font-weight: 500;
+        }
+
+        .related-tasks-header {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        /* ============================================
+           TASK DETAIL VIEW (Level 3)
+           ============================================ */
+        .task-detail-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e0d8d1;
+            margin-bottom: 16px;
+        }
+
+        .task-detail-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .task-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 12px 0;
+        }
+
+        .task-timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #9ca3af;
+            gap: 4px;
+        }
+
+        .task-timeline-step.done {
+            color: #10b981;
+        }
+
+        .task-timeline-step.active {
+            color: #3b82f6;
+        }
+
+        .task-timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e5e7eb;
+        }
+
+        .task-timeline-step.done .task-timeline-dot {
+            background: #10b981;
+        }
+
+        .task-timeline-step.active .task-timeline-dot {
+            background: #3b82f6;
+        }
+
+        .task-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .task-detail-item .label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #8a7e76;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .task-detail-item .value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* ============================================
+           BACK BUTTON
+           ============================================ */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(255,255,255,0.12);
+            color: #ffffff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ============================================
+           SNAPSHOT MODE
+           ============================================ */
+        body.snapshot-mode {
+            background: var(--text);
+        }
+
+        body.snapshot-mode .app-container {
+            background: #ffffff;
+            position: relative;
+        }
+
+        body.snapshot-mode .bottom-nav {
+            display: none !important;
+        }
+
+        body.snapshot-mode::after {
+            content: attr(data-timestamp);
+            position: fixed;
+            bottom: 12px;
+            right: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+            z-index: 10;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (min-width: 481px) {
+            .app-container {
+                margin: 0 auto;
+                max-width: 480px;
+            }
+
+            .bottom-nav {
+                max-width: 480px;
+                margin: 0 auto;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ============================================
+           UTILITY
+           ============================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-8 {
+            margin-top: 8px;
+        }
+
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- QBSkin: Main App Container -->
+    <div class="app-container">
+        <!-- QBSkin: Header -->
+        <div class="app-header">
+            <button class="back-btn" id="backBtn" onclick="goBack()" style="display:none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <h1>Tickets</h1>
+            <div class="header-actions">
+                <button class="icon-btn" id="refreshBtn" title="Refresh">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36M20.49 15a9 9 0 0 1-14.85 3.36"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" id="snapshotBtn" title="Snapshot">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-spacer"></div>
+
+        <!-- Level 1: Ticket Dashboard -->
+        <div class="view-panel active" id="viewDashboard">
+            <div id="dashboardCards"><div style="text-align:center;padding:40px;color:#64748b;">Loading tickets...</div></div>
+        </div>
+
+        <!-- Level 2: Ticket Detail + Related Tasks -->
+        <div class="view-panel" id="viewTicketDetail">
+            <div id="ticketDetailContent"></div>
+        </div>
+
+        <!-- Level 3: Individual Task Detail -->
+        <div class="view-panel" id="viewTaskDetail">
+            <div id="taskDetailContent"></div>
+        </div>
+    </div>
+
+    <!-- QBSkin: Bottom Navigation -->
+    <div class="bottom-nav" id="bottomNav">
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=cc-quick-glance.html" class="nav-item" title="Dashboard">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-project-detail.html" class="nav-item" title="Project">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            <span>Project</span>
+        </a>
+        <button class="nav-item active" title="Tasks">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 5.18L10.59 16.6l-4.24-4.24 1.41-1.41 2.83 2.83 10-10L22 5.18zM19.79 10.22C19.92 10.79 20 11.39 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8c1.58 0 3.04.46 4.28 1.25l1.44-1.44A9.9 9.9 0 0012 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-1.19-.22-2.33-.6-3.39l-1.61 1.61z"/>
+            </svg>
+            <span>Tasks</span>
+        </button>
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-labor.html" class="nav-item" title="Labor">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            <span>Labor</span>
+        </a>
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-trends.html" class="nav-item" title="Trends">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
+            </svg>
+            <span>Trends</span>
+        </a>
+    </div>
+
+    <script>
+        /* ============================================
+           QUICKBASE API CONFIG
+           ============================================ */
+        /* ============================================
+           VIEW STATE CONSTANTS
+           ============================================ */
+        const VIEW = { DASHBOARD: 'dashboard', TICKET_DETAIL: 'ticket-detail', TASK_DETAIL: 'task-detail' };
+        let currentView = VIEW.DASHBOARD;
+        let selectedTicket = null;
+        let selectedTask = null;
+        let allTickets = [];
+        let allArrivyTasks = [];
+
+        const QB_CONFIG = {
+            realm: 'kin.quickbase.com',
+            appId: 'br9kwm8bk',
+            token: 'b6teb3_p3bs_0_bzh28isbyba5yh9ujb73hqthh5',
+            tables: {
+                projects: 'br9kwm8na',
+                tickets: 'bstdqwrkg',    // Tickets table
+                notes: 'bsb6bqt3b',      // Notes table
+                events: 'bsbguxz4i',
+                intakeEvents: 'bt4a8ypkq'
+            }
+        };
+
+        // Field IDs for Tickets table (bstdqwrkg)
+        const FIELD_IDS = {
+            recordId: 3,                // Record ID#
+            dateTimeCreated: 1,         // Date/Time Created
+            ticketCreator: 4,           // Ticket Creator
+            recordTitle: 19,            // Record Title
+            description: 20,            // Description
+            dateCreated: 23,            // Date Created
+            relatedProject: 26,         // Related Project
+            projectFullName: 27,        // Project - Full Name
+            projectStatus: 36,          // Project - Status
+            projectSystemSize: 42,      // Project - System Size (kW)
+            projectCloser: 44,          // Project - Closer
+            category: 47,               // Category
+            ticketIssue: 50,            // Ticket Issue
+            dueDate: 52,                // Due Date
+            completedTimestamp: 59,     // Completed Timestamp
+            assignedToReportable: 67,   // Assigned To (Reportable)
+            projectCoordinator: 85,     // Project Coordinator
+            ticketPriority: 87,         // Ticket Priority
+            customTicketIssue: 88,      // Custom Ticket Issue
+            ticketStatus: 91,           // Ticket Status
+            officialDueDate: 95,        // Official Due Date
+            assignedTo: 100,            // Assigned To
+            ticketDisposition: 108      // Ticket Disposition
+        };
+
+        /* ============================================
+           UTILITY: QB VALUE HELPER
+           ============================================ */
+
+        /**
+         * Helper function to safely get QB field value
+         * QB records have format: { "fieldId": {"value": actualValue} }
+         */
+        function qbv(record, fieldId) {
+            return record[fieldId] ? record[fieldId].value : null;
+        }
+
+        /**
+         * Escape HTML to prevent XSS
+         */
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        /**
+         * Navigate between views
+         */
+        function navigateView(view, data) {
+            currentView = view;
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+
+            // Update back button behavior
+            const backBtn = document.getElementById('backBtn');
+
+            if (view === VIEW.DASHBOARD) {
+                document.getElementById('viewDashboard').classList.add('active');
+                if (backBtn) backBtn.style.display = 'none';
+                document.querySelector('.app-header h1').textContent = 'Tickets';
+            } else if (view === VIEW.TICKET_DETAIL) {
+                selectedTicket = data;
+                document.getElementById('viewTicketDetail').classList.add('active');
+                if (backBtn) backBtn.style.display = 'flex';
+                document.querySelector('.app-header h1').textContent = escapeHtml(qbv(data, 19) || 'Ticket Detail');
+                renderTicketDetail(data);
+            } else if (view === VIEW.TASK_DETAIL) {
+                selectedTask = data;
+                document.getElementById('viewTaskDetail').classList.add('active');
+                if (backBtn) backBtn.style.display = 'flex';
+                document.querySelector('.app-header h1').textContent = escapeHtml(qbv(data, 56) || 'Task Detail');
+                renderArrivyTaskDetail(data);
+            }
+        }
+
+        /**
+         * Go back to previous view
+         */
+        function goBack() {
+            if (currentView === VIEW.TASK_DETAIL) {
+                navigateView(VIEW.TICKET_DETAIL, selectedTicket);
+            } else {
+                navigateView(VIEW.DASHBOARD);
+            }
+        }
+
+        /* ============================================
+           STATE MANAGEMENT
+           ============================================ */
+        let state = {
+            tasks: [],
+            filteredTasks: [],
+            currentFilter: 'all',
+            dateFrom: null,
+            dateTo: null,
+            selectedProject: null,
+            fieldMap: {},           // label => fieldId map
+            loading: true,
+            expandedTaskId: null,
+            isSnapshotMode: false
+        };
+
+        /* ============================================
+           UTILITY: QB API HELPERS
+           ============================================ */
+
+        /**
+         * Build QB API headers
+         */
+        function getQBHeaders() {
+            return {
+                'QB-Realm-Hostname': QB_CONFIG.realm,
+                'Authorization': `QB-USER-TOKEN ${QB_CONFIG.token}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        /**
+         * Discover field IDs from QB table
+         * Builds a label => fieldId map for dynamic lookups
+         */
+        async function discoverFields() {
+            try {
+                const response = await fetch(
+                    `https://api.quickbase.com/v1/fields?tableId=${QB_CONFIG.tables.tickets}`,
+                    { headers: getQBHeaders() }
+                );
+                if (!response.ok) throw new Error(`Field discovery failed: ${response.status}`);
+
+                const data = await response.json();
+                state.fieldMap = {};
+                data.forEach(field => {
+                    state.fieldMap[field.label] = field.id;
+                });
+                console.log('Field map:', state.fieldMap);
+                return true;
+            } catch (error) {
+                console.error('Field discovery error:', error);
+                return false;
+            }
+        }
+
+        /**
+         * Query QB records with WHERE clause
+         */
+        async function queryTasks(whereClause = '') {
+            try {
+                const body = {
+                    from: QB_CONFIG.tables.tickets,
+                    select: [
+                        FIELD_IDS.recordId,
+                        FIELD_IDS.recordTitle,
+                        FIELD_IDS.description,
+                        FIELD_IDS.ticketStatus,
+                        FIELD_IDS.ticketPriority,
+                        FIELD_IDS.officialDueDate,
+                        FIELD_IDS.category,
+                        FIELD_IDS.assignedToReportable,
+                        FIELD_IDS.projectFullName,
+                        FIELD_IDS.projectStatus,
+                        FIELD_IDS.projectCloser,
+                        FIELD_IDS.ticketDisposition
+                    ]
+                };
+
+                if (whereClause) {
+                    body.where = whereClause;
+                }
+
+                const response = await fetch(
+                    `https://api.quickbase.com/v1/records/query`,
+                    {
+                        method: 'POST',
+                        headers: getQBHeaders(),
+                        body: JSON.stringify(body)
+                    }
+                );
+
+                if (!response.ok) throw new Error(`Query failed: ${response.status}`);
+
+                const data = await response.json();
+                return data.data || [];
+            } catch (error) {
+                console.error('Query error:', error);
+                return [];
+            }
+        }
+
+        /**
+         * Create a new ticket record in QB
+         * Structure: { to: tableId, data: [recordObj], fieldsToReturn: [3] }
+         */
+        async function createTask(taskData) {
+            try {
+                const record = {};
+                record[FIELD_IDS.recordTitle] = { value: taskData.title };
+                record[FIELD_IDS.description] = { value: taskData.description };
+                record[FIELD_IDS.officialDueDate] = { value: taskData.dueDate };
+                record[FIELD_IDS.category] = { value: taskData.category };
+                record[FIELD_IDS.ticketPriority] = { value: taskData.priority };
+
+                const response = await fetch(
+                    `https://api.quickbase.com/v1/records`,
+                    {
+                        method: 'POST',
+                        headers: getQBHeaders(),
+                        body: JSON.stringify({
+                            to: QB_CONFIG.tables.tickets,
+                            data: [record],
+                            fieldsToReturn: [FIELD_IDS.recordId, FIELD_IDS.recordTitle, FIELD_IDS.officialDueDate]
+                        })
+                    }
+                );
+
+                if (!response.ok) throw new Error(`Create failed: ${response.status}`);
+
+                const data = await response.json();
+                console.log('Ticket created:', data);
+                return data.data?.[0] || null;
+            } catch (error) {
+                console.error('Create error:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Update ticket status
+         */
+        async function updateTaskStatus(recordId, newStatus) {
+            try {
+                const record = {};
+                record[FIELD_IDS.ticketStatus] = { value: newStatus };
+
+                const response = await fetch(
+                    `https://api.quickbase.com/v1/records`,
+                    {
+                        method: 'POST',
+                        headers: getQBHeaders(),
+                        body: JSON.stringify({
+                            to: QB_CONFIG.tables.tickets,
+                            data: [{ id: recordId, ...record }],
+                            fieldsToReturn: [FIELD_IDS.recordId]
+                        })
+                    }
+                );
+
+                if (!response.ok) throw new Error(`Update failed: ${response.status}`);
+
+                console.log('Ticket updated:', recordId);
+                return true;
+            } catch (error) {
+                console.error('Update error:', error);
+                return false;
+            }
+        }
+
+        /* ============================================
+           DATE UTILITIES
+           ============================================ */
+
+        /**
+         * Get today's date as YYYY-MM-DD
+         */
+        function getTodayString() {
+            const now = new Date();
+            return now.toISOString().split('T')[0];
+        }
+
+        /**
+         * Get date N days ago as YYYY-MM-DD
+         */
+        function getDateNDaysAgo(n) {
+            const date = new Date();
+            date.setDate(date.getDate() - n);
+            return date.toISOString().split('T')[0];
+        }
+
+        /**
+         * Get start of week (Monday) as YYYY-MM-DD
+         */
+        function getWeekStart() {
+            const now = new Date();
+            const day = now.getDay();
+            const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+            const monday = new Date(now.setDate(diff));
+            return monday.toISOString().split('T')[0];
+        }
+
+        /**
+         * Get start of month as YYYY-MM-DD
+         */
+        function getMonthStart() {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+        }
+
+        /**
+         * Apply date preset
+         */
+        function applyDatePreset(preset) {
+            const today = getTodayString();
+            switch (preset) {
+                case 'today':
+                    state.dateFrom = today;
+                    state.dateTo = today;
+                    break;
+                case 'week':
+                    state.dateFrom = getWeekStart();
+                    state.dateTo = today;
+                    break;
+                case 'month':
+                    state.dateFrom = getMonthStart();
+                    state.dateTo = today;
+                    break;
+                case '30days':
+                    state.dateFrom = getDateNDaysAgo(30);
+                    state.dateTo = today;
+                    break;
+            }
+            updateDateInputs();
+            filterTasks();
+        }
+
+        /**
+         * Update date input fields from state
+         */
+        function updateDateInputs() {
+            document.getElementById('dateFrom').value = state.dateFrom || '';
+            document.getElementById('dateTo').value = state.dateTo || '';
+        }
+
+        /* ============================================
+           GENERIC API QUERY FUNCTION
+           ============================================ */
+        /**
+         * Generic apiQuery function for any QB table
+         */
+        async function apiQuery(tableId, fields, whereClause, limit) {
+            try {
+                const body = {
+                    from: tableId,
+                    select: fields
+                };
+
+                if (whereClause) {
+                    body.where = whereClause;
+                }
+
+                if (limit) {
+                    body.limit = limit;
+                }
+
+                const response = await fetch(
+                    `https://api.quickbase.com/v1/records/query`,
+                    {
+                        method: 'POST',
+                        headers: getQBHeaders(),
+                        body: JSON.stringify(body)
+                    }
+                );
+
+                if (!response.ok) throw new Error(`Query failed: ${response.status}`);
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('API Query error:', error);
+                return { data: [] };
+            }
+        }
+
+        /* ============================================
+           TICKET DASHBOARD RENDER (Level 1)
+           ============================================ */
+        function renderTicketDashboard(tickets) {
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const weekEnd = new Date(now);
+            weekEnd.setDate(weekEnd.getDate() + 7);
+            const weekStr = weekEnd.toISOString().split('T')[0];
+
+            const groups = { overdue: [], today: [], thisWeek: [], later: [], completed: [] };
+
+            tickets.forEach(t => {
+                const status = (qbv(t, 91) || '').toLowerCase();
+                const completed = qbv(t, 59);
+                if (completed || status === 'completed' || status === 'closed') {
+                    groups.completed.push(t);
+                    return;
+                }
+
+                const due = qbv(t, 52) || qbv(t, 95) || '';
+                if (!due) {
+                    groups.later.push(t);
+                    return;
+                }
+                const dueDate = due.split('T')[0];
+
+                if (dueDate < todayStr) groups.overdue.push(t);
+                else if (dueDate === todayStr) groups.today.push(t);
+                else if (dueDate <= weekStr) groups.thisWeek.push(t);
+                else groups.later.push(t);
+            });
+
+            const container = document.getElementById('dashboardCards');
+            if (!tickets.length) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;">No tickets found</div>';
+                return;
+            }
+
+            let html = '';
+            const groupConfig = [
+                { key: 'overdue', label: 'Overdue', cls: 'overdue' },
+                { key: 'today', label: 'Due Today', cls: 'today' },
+                { key: 'thisWeek', label: 'Due This Week', cls: '' },
+                { key: 'later', label: 'Upcoming', cls: '' },
+                { key: 'completed', label: 'Completed', cls: '' }
+            ];
+
+            groupConfig.forEach(g => {
+                const items = groups[g.key];
+                if (!items.length) return;
+                html += `<div class="ticket-group">`;
+                html += `<div class="ticket-group-header ${g.cls}">${g.label} <span class="count">${items.length}</span></div>`;
+                items.forEach(t => {
+                    const title = qbv(t, 19) || qbv(t, 50) || 'Untitled';
+                    const priority = qbv(t, 87) || '';
+                    const status = qbv(t, 91) || 'Open';
+                    const assignee = qbv(t, 67) || '';
+                    const due = qbv(t, 52) || qbv(t, 95) || '';
+                    const dueStr = due ? new Date(due).toLocaleDateString('en-US', {month:'short', day:'numeric'}) : '';
+                    const isOverdue = g.key === 'overdue';
+                    const priClass = priority.toLowerCase().includes('high') ? 'priority-high' : priority.toLowerCase().includes('med') ? 'priority-med' : '';
+
+                    html += `<div class="ticket-dash-card" onclick="navigateView(VIEW.TICKET_DETAIL, ${JSON.stringify(t).replace(/"/g, '&quot;')})">
+                        <div class="ticket-title">${escapeHtml(title)}</div>
+                        <div class="ticket-meta">
+                            ${priority ? `<span class="${priClass}">${escapeHtml(priority)}</span>` : ''}
+                            <span>${escapeHtml(status)}</span>
+                            ${assignee ? `<span>${escapeHtml(assignee)}</span>` : ''}
+                        </div>
+                        ${dueStr ? `<div class="ticket-due ${isOverdue?'overdue':''}">Due: ${dueStr}</div>` : ''}
+                    </div>`;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        /* ============================================
+           TICKET DETAIL RENDER (Level 2)
+           ============================================ */
+        async function renderTicketDetail(ticket) {
+            const container = document.getElementById('ticketDetailContent');
+            const title = qbv(ticket, 19) || 'Untitled';
+            const desc = qbv(ticket, 20) || '';
+            const category = qbv(ticket, 47) || '';
+            const issue = qbv(ticket, 50) || '';
+            const status = qbv(ticket, 91) || 'Open';
+            const priority = qbv(ticket, 87) || '';
+            const assignee = qbv(ticket, 67) || '';
+            const projectName = qbv(ticket, 27) || '';
+            const due = qbv(ticket, 52) || qbv(ticket, 95) || '';
+            const projectId = qbv(ticket, 26);
+
+            let html = `<div class="ticket-detail-header">
+                <div class="ticket-detail-title">${escapeHtml(title)}</div>
+                ${desc ? `<div class="ticket-detail-desc">${escapeHtml(desc)}</div>` : ''}
+                <div class="ticket-detail-info">
+                    <div><div class="label">Status</div><div class="value">${escapeHtml(status)}</div></div>
+                    <div><div class="label">Priority</div><div class="value">${escapeHtml(priority || 'Normal')}</div></div>
+                    <div><div class="label">Category</div><div class="value">${escapeHtml(category || issue || '-')}</div></div>
+                    <div><div class="label">Assigned</div><div class="value">${escapeHtml(assignee || '-')}</div></div>
+                    <div><div class="label">Project</div><div class="value">${escapeHtml(projectName || '-')}</div></div>
+                    <div><div class="label">Due</div><div class="value">${due ? new Date(due).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '-'}</div></div>
+                </div>
+            </div>`;
+
+            // Load related Arrivy tasks if we have a project ID
+            if (projectId) {
+                html += '<div class="related-tasks-header">Related Field Tasks</div>';
+                try {
+                    const arrivyFields = [3, 56, 85, 115, 97, 146, 117, 137, 268, 107, 270];
+                    const result = await apiQuery('bvbqgs5yc', arrivyFields, `{'6'.EX.'${projectId}'}`, 50);
+                    if (result.data && result.data.length > 0) {
+                        const sorted = result.data.sort((a,b) => (qbv(b,115)||'').localeCompare(qbv(a,115)||''));
+                        sorted.forEach(task => {
+                            const tmpl = qbv(task, 56) || 'Unknown';
+                            const schedDate = qbv(task, 115);
+                            const taskStatus = qbv(task, 85) || '';
+                            const crew = qbv(task, 268) || '';
+                            const dateStr = schedDate ? new Date(schedDate).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+                            html += `<div class="ticket-dash-card" onclick="navigateView(VIEW.TASK_DETAIL, ${JSON.stringify(task).replace(/"/g, '&quot;')})">
+                                <div class="ticket-title">${escapeHtml(tmpl)}</div>
+                                <div class="ticket-meta"><span>${escapeHtml(taskStatus)}</span>${crew?`<span>${escapeHtml(crew)}</span>`:''}<span>${dateStr}</span></div>
+                            </div>`;
+                        });
+                    } else {
+                        html += '<div style="text-align:center;padding:20px;color:#64748b;font-size:13px;">No related field tasks</div>';
+                    }
+                } catch(e) {
+                    html += '<div style="text-align:center;padding:20px;color:#64748b;font-size:13px;">Could not load related tasks</div>';
+                }
+            }
+            container.innerHTML = html;
+        }
+
+        /* ============================================
+           TASK DETAIL RENDER (Level 3)
+           ============================================ */
+        function renderArrivyTaskDetail(task) {
+            const container = document.getElementById('taskDetailContent');
+            const tmpl = qbv(task, 56) || 'Unknown';
+            const status = qbv(task, 85) || '';
+            const schedDate = qbv(task, 115);
+            const enrouteDt = qbv(task, 146);
+            const arrivedChk = qbv(task, 117);
+            const submittedDt = qbv(task, 97);
+            const completeDt = qbv(task, 137);
+            const crew = qbv(task, 268) || '';
+            const taskUrl = qbv(task, 107);
+            const installComp = (qbv(task, 270) || '').toLowerCase() === 'yes';
+
+            const steps = [
+                { label: 'Scheduled', done: !!schedDate },
+                { label: 'En Route', done: !!enrouteDt },
+                { label: 'On Site', done: !!arrivedChk },
+                { label: 'Submitted', done: !!submittedDt },
+                { label: 'Complete', done: !!completeDt || installComp }
+            ];
+            let lastDone = -1;
+            steps.forEach((s,i) => { if (s.done) lastDone = i; });
+
+            let html = `<div class="task-detail-card">
+                <div class="task-detail-name">${escapeHtml(tmpl)}</div>
+                <div class="task-timeline">
+                    ${steps.map((s,i) => `<div class="task-timeline-step ${s.done?'done':i===lastDone+1?'active':''}">
+                        <div class="task-timeline-dot"></div>
+                        <span>${s.label}</span>
+                    </div>`).join('')}
+                </div>
+                <div class="task-detail-grid">
+                    <div class="task-detail-item"><div class="label">Status</div><div class="value">${escapeHtml(status)}</div></div>
+                    <div class="task-detail-item"><div class="label">Crew</div><div class="value">${escapeHtml(crew || '-')}</div></div>
+                    <div class="task-detail-item"><div class="label">Scheduled</div><div class="value">${schedDate ? new Date(schedDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '-'}</div></div>
+                    <div class="task-detail-item"><div class="label">En Route</div><div class="value">${enrouteDt ? new Date(enrouteDt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : '-'}</div></div>
+                    <div class="task-detail-item"><div class="label">Submitted</div><div class="value">${submittedDt ? new Date(submittedDt).toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' + new Date(submittedDt).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : '-'}</div></div>
+                    <div class="task-detail-item"><div class="label">Install Complete</div><div class="value">${installComp ? 'Yes' : 'No'}</div></div>
+                </div>
+                ${taskUrl ? `<a href="${taskUrl}" target="_blank" style="display:block;text-align:center;margin-top:16px;padding:12px;background:#1e293b;color:white;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;">Open in Arrivy</a>` : ''}
+            </div>`;
+            container.innerHTML = html;
+        }
+
+        /* ============================================
+           LOAD TICKETS
+           ============================================ */
+        async function loadTickets() {
+            const ticketFields = [3, 19, 20, 23, 26, 27, 44, 47, 50, 52, 59, 67, 87, 91, 95, 108];
+            const result = await apiQuery('bstdqwrkg', ticketFields, `{'91'.XEX.'Completed'}AND{'91'.XEX.'Closed'}`, 500);
+            allTickets = result.data || [];
+            // Also load completed tickets
+            const completed = await apiQuery('bstdqwrkg', ticketFields, `{'91'.EX.'Completed'}OR{'91'.EX.'Closed'}`, 100);
+            allTickets = [...allTickets, ...(completed.data || [])];
+            renderTicketDashboard(allTickets);
+        }
+
+        /* ============================================
+           TASK FILTERING & RENDERING
+           ============================================ */
+
+        /**
+         * Parse QB response and normalize ticket data
+         */
+        function normalizeTask(record) {
+            return {
+                id: qbv(record, FIELD_IDS.recordId),
+                title: qbv(record, FIELD_IDS.recordTitle) || 'Unknown Ticket',
+                description: qbv(record, FIELD_IDS.description),
+                status: qbv(record, FIELD_IDS.ticketStatus) || 'Open',
+                priority: qbv(record, FIELD_IDS.ticketPriority),
+                dueDate: qbv(record, FIELD_IDS.officialDueDate),
+                category: qbv(record, FIELD_IDS.category),
+                assignedTo: qbv(record, FIELD_IDS.assignedToReportable) || 'Unassigned',
+                projectName: qbv(record, FIELD_IDS.projectFullName),
+                projectStatus: qbv(record, FIELD_IDS.projectStatus),
+                projectCloser: qbv(record, FIELD_IDS.projectCloser),
+                disposition: qbv(record, FIELD_IDS.ticketDisposition)
+            };
+        }
+
+        /**
+         * Check if ticket matches current filters
+         */
+        function taskMatchesFilters(task) {
+            // Status filter (FID 91: Open, In Progress, Completed)
+            if (state.currentFilter !== 'all') {
+                const normalizedStatus = task.status?.toLowerCase() || 'open';
+                if (normalizedStatus !== state.currentFilter) return false;
+            }
+
+            // Date filter (using Official Due Date FID 95)
+            if (state.dateFrom && state.dateTo && task.dueDate) {
+                const taskDate = task.dueDate.split('T')[0];
+                if (taskDate < state.dateFrom || taskDate > state.dateTo) return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Filter and sort tasks
+         */
+        function filterTasks() {
+            state.filteredTasks = state.tasks.filter(taskMatchesFilters);
+            renderTaskList();
+        }
+
+        /**
+         * Render task list
+         */
+        function renderTaskList() {
+            const container = document.getElementById('taskContent');
+
+            if (state.loading) {
+                container.innerHTML = '<div class="loading-spinner"></div>';
+                return;
+            }
+
+            if (state.filteredTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div class="empty-state-title">No Tasks</div>
+                        <div class="empty-state-message">
+                            ${state.tasks.length === 0 ? 'No tasks found. Create one to get started!' : 'No tasks match your filters.'}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = state.filteredTasks.map(task => renderTaskCard(task)).join('');
+
+            // Attach event listeners
+            document.querySelectorAll('.task-card').forEach(card => {
+                const taskId = card.dataset.taskId;
+                card.addEventListener('click', () => toggleTaskExpanded(taskId));
+            });
+
+            document.querySelectorAll('.note-toggle-btn').forEach(btn => {
+                const taskId = btn.dataset.taskId;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleNoteEditor(taskId);
+                });
+            });
+
+            document.querySelectorAll('.note-save-btn').forEach(btn => {
+                const taskId = btn.dataset.taskId;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    saveTaskNote(taskId);
+                });
+            });
+
+            document.querySelectorAll('.note-cancel-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleNoteEditor(btn.dataset.taskId);
+                });
+            });
+
+            document.querySelectorAll('.status-update-select').forEach(select => {
+                const taskId = select.dataset.taskId;
+                select.addEventListener('change', (e) => {
+                    e.stopPropagation();
+                    updateTaskStatusUI(taskId, e.target.value);
+                });
+            });
+        }
+
+        /**
+         * Render a single ticket card
+         */
+        function renderTaskCard(task) {
+            const isExpanded = state.expandedTaskId === task.id;
+            const statusClass = task.status?.toLowerCase() || 'open';
+            const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date';
+            const borderColor = getTaskTypeBorderColor(task.category);
+
+            let priorityChip = '';
+            if (task.priority) {
+                const priorityClass = task.priority?.toLowerCase().replace(/\s+/g, '-');
+                priorityChip = `<span class="task-status-chip priority-${priorityClass}">${escapeHtml(task.priority)}</span>`;
+            }
+
+            let dispositionChip = '';
+            if (task.disposition) {
+                dispositionChip = `<span class="task-status-chip">${escapeHtml(task.disposition)}</span>`;
+            }
+
+            return `
+                <div class="task-card ${isExpanded ? 'expanded' : ''}" data-task-id="${task.id}" style="border-left-color: ${borderColor}">
+                    <div class="task-card-header">
+                        <div class="task-customer-type">
+                            <div class="task-customer-name">${escapeHtml(task.title)}</div>
+                            <div class="task-type">${escapeHtml(task.category || 'Uncategorized')}</div>
+                        </div>
+                        <span class="status-pill ${statusClass}">${escapeHtml(task.status || 'Open')}</span>
+                    </div>
+
+                    <div class="task-card-details">
+                        <span class="task-datetime">Due: ${dueDate}</span>
+                        <span>${escapeHtml(task.projectName || '')}</span>
+                    </div>
+
+                    <div class="task-card-footer">
+                        <div class="task-tech">${escapeHtml(task.assignedTo)}</div>
+                        <div class="task-status-chips">
+                            ${priorityChip}
+                            ${dispositionChip}
+                        </div>
+                    </div>
+
+                    <!-- Expanded Details Section -->
+                    <div class="task-expanded-content">
+                        <div class="detail-row">
+                            <span class="detail-label">Title:</span>
+                            <span class="detail-value">${escapeHtml(task.title)}</span>
+                        </div>
+
+                        ${task.description ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Description:</span>
+                                <span class="detail-value">${escapeHtml(task.description)}</span>
+                            </div>
+                        ` : ''}
+
+                        <div class="detail-row">
+                            <span class="detail-label">Due Date:</span>
+                            <span class="detail-value">${dueDate}</span>
+                        </div>
+
+                        ${task.projectName ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Project:</span>
+                                <span class="detail-value">${escapeHtml(task.projectName)}</span>
+                            </div>
+                        ` : ''}
+
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <select class="form-select status-update-select" data-task-id="${task.id}">
+                                <option value="Open" ${task.status === 'Open' ? 'selected' : ''}>Open</option>
+                                <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="Completed" ${task.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </div>
+
+                        <div class="task-actions-expanded">
+                            <button class="action-btn secondary note-toggle-btn" data-task-id="${task.id}">Add Note</button>
+                        </div>
+
+                        <!-- Note Editor (inline) -->
+                        <div class="note-editor" id="noteEditor-${task.id}">
+                            <textarea class="note-textarea" id="noteText-${task.id}" placeholder="Type your note..."></textarea>
+                            <div class="note-actions">
+                                <button class="note-btn cancel note-cancel-btn" data-task-id="${task.id}">Cancel</button>
+                                <button class="note-btn save note-save-btn" data-task-id="${task.id}">Save Note</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Get border color based on ticket category
+         */
+        function getTaskTypeBorderColor(category) {
+            const colorMap = {
+                'bug': '#ef4444',
+                'feature': '#3b82f6',
+                'enhancement': '#8b5cf6',
+                'urgent': '#f59e0b',
+                'support': '#10b981',
+                'maintenance': '#06b6d4',
+                'other': '#8a7e76'
+            };
+            return colorMap[category?.toLowerCase()] || '#1a5632';
+        }
+
+        /**
+         * Toggle task expanded state
+         */
+        function toggleTaskExpanded(taskId) {
+            if (state.expandedTaskId === taskId) {
+                state.expandedTaskId = null;
+            } else {
+                state.expandedTaskId = taskId;
+            }
+            renderTaskList();
+        }
+
+        /**
+         * Toggle note editor visibility
+         */
+        function toggleNoteEditor(taskId) {
+            const editor = document.getElementById(`noteEditor-${taskId}`);
+            if (editor) {
+                editor.classList.toggle('show');
+            }
+        }
+
+        /**
+         * Save task note
+         */
+        async function saveTaskNote(taskId) {
+            const textarea = document.getElementById(`noteText-${taskId}`);
+            const note = textarea?.value || '';
+
+            // TODO: Implement actual API call to save note
+            // For now, just show feedback
+            console.log(`Saving note for task ${taskId}:`, note);
+
+            // Visual feedback
+            const btn = document.querySelector(`.note-save-btn[data-task-id="${taskId}"]`);
+            if (btn) {
+                const originalText = btn.textContent;
+                btn.textContent = 'Saved ✓';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    toggleNoteEditor(taskId);
+                }, 1000);
+            }
+        }
+
+        /**
+         * Update task status via API
+         */
+        async function updateTaskStatusUI(taskId, newStatus) {
+            const success = await updateTaskStatus(taskId, newStatus);
+            if (success) {
+                // Update local state
+                const task = state.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.status = newStatus;
+                    filterTasks();
+                }
+            } else {
+                alert('Failed to update task status.');
+            }
+        }
+
+        /* ============================================
+           MODAL MANAGEMENT
+           ============================================ */
+
+        /**
+         * Open create task modal
+         */
+        function openCreateModal() {
+            document.getElementById('modalOverlay').classList.add('show');
+            document.getElementById('createTaskModal').classList.add('show');
+        }
+
+        /**
+         * Close create task modal
+         */
+        function closeCreateModal() {
+            document.getElementById('modalOverlay').classList.remove('show');
+            document.getElementById('createTaskModal').classList.remove('show');
+            document.getElementById('createTaskForm').reset();
+        }
+
+        /**
+         * Submit create ticket form
+         */
+        async function submitCreateTask(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('customerName').value;
+            const category = document.getElementById('taskType').value;
+            const dueDate = document.getElementById('scheduledDate').value;
+            const description = document.getElementById('taskNotes').value;
+            const priority = 'Normal';  // Default priority
+
+            if (!title || !category || !dueDate) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitCreateBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+
+            const result = await createTask({
+                title,
+                category,
+                dueDate,
+                description,
+                priority
+            });
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Ticket';
+
+            if (result) {
+                closeCreateModal();
+                // Refresh ticket list
+                loadTasks();
+            } else {
+                alert('Failed to create ticket. Please try again.');
+            }
+        }
+
+        /* ============================================
+           SNAPSHOT MODE
+           ============================================ */
+
+        /**
+         * Toggle snapshot mode
+         */
+        function toggleSnapshotMode() {
+            state.isSnapshotMode = !state.isSnapshotMode;
+
+            if (state.isSnapshotMode) {
+                document.body.classList.add('snapshot-mode');
+                const now = new Date();
+                const timestamp = now.toLocaleString();
+                document.body.setAttribute('data-timestamp', `Snapshot: ${timestamp}`);
+            } else {
+                document.body.classList.remove('snapshot-mode');
+                document.body.removeAttribute('data-timestamp');
+            }
+        }
+
+        /* ============================================
+           DATA LOADING
+           ============================================ */
+
+        /**
+         * Load all tasks from QB
+         */
+        async function loadTasks() {
+            state.loading = true;
+            renderTaskList();
+
+            const records = await queryTasks();
+            state.tasks = records.map(normalizeTask);
+            state.loading = false;
+
+            filterTasks();
+        }
+
+        /* ============================================
+           INITIALIZATION & EVENT LISTENERS
+           ============================================ */
+
+        /**
+         * Initialize app
+         */
+        async function initApp() {
+            // Parse URL hash for project or action
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+
+            if (params.has('project')) {
+                state.selectedProject = params.get('project');
+            }
+
+            // Discover QB fields
+            await discoverFields();
+
+            // Load initial data (new dashboard)
+            await loadTickets();
+
+            // Attach event listeners
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', loadTickets);
+            }
+
+            const snapshotBtn = document.getElementById('snapshotBtn');
+            if (snapshotBtn) {
+                snapshotBtn.addEventListener('click', toggleSnapshotMode);
+            }
+        }
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1222 @@
+<!-- ============================================
+     QBSkin Mobile Suite — Trends & Insights
+     Part of: QuickBase Mobile Skin Build
+     Version: 1.0
+     Last Updated: 2026-03-10
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Trends & Insights | QBSkin</title>
+    <style>
+        /* QBSkin: Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background-color: #f7f3f0;
+        }
+
+        body {
+            color: #2c2420;
+            font-size: 16px;
+            line-height: 1.5;
+            padding-top: 0;
+            padding-bottom: 76px;
+            padding-bottom: max(76px, env(safe-area-inset-bottom) + 56px);
+            overflow-x: hidden;
+        }
+
+        body.snapshot-mode {
+            padding-bottom: 60px;
+        }
+
+        /* QBSkin: Typography */
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c2420;
+            margin-bottom: 4px;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c2420;
+            margin-bottom: 12px;
+        }
+
+        h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c2420;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #6b6058;
+            font-size: 14px;
+        }
+
+        /* QBSkin: Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            color: #ffffff;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: 16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            z-index: 100;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+
+        .header-title {
+            flex: 1;
+            color: #ffffff;
+        }
+
+        .header-title h1 {
+            margin-bottom: 0;
+            color: #ffffff;
+            font-size: 24px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .header-spacer {
+            height: calc(56px + env(safe-area-inset-top, 0px));
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(255,255,255,0.12);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .btn-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* QBSkin: Period Selector */
+        .period-selector {
+            background: white;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0d8d1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        .period-chips {
+            display: flex;
+            gap: 8px;
+            min-width: min-content;
+            padding-right: 16px;
+        }
+
+        .chip {
+            padding: 8px 12px;
+            border: 1px solid #e0d8d1;
+            background: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b6058;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .chip.active {
+            background: #1a5632;
+            color: white;
+            border-color: #1a5632;
+        }
+
+        .chip:active:not(.active) {
+            background: #f7f3f0;
+        }
+
+        .date-inputs {
+            display: none;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .date-inputs.show {
+            display: flex;
+        }
+
+        .date-inputs input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e0d8d1;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #2c2420;
+        }
+
+        /* QBSkin: Content Area */
+        .content {
+            padding: 16px;
+        }
+
+        .snapshot-mode .period-selector {
+            display: none;
+        }
+
+        /* QBSkin: KPI Summary Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .kpi-card {
+            background: white;
+            border: 1px solid #e0d8d1;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: #8a7e76;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a5632;
+            margin-bottom: 4px;
+        }
+
+        .kpi-sub {
+            font-size: 12px;
+            color: #8a7e76;
+        }
+
+        .kpi-card.warning .kpi-value {
+            color: #f59e0b;
+        }
+
+        .kpi-card.danger .kpi-value {
+            color: #ef4444;
+        }
+
+        .kpi-card.success .kpi-value {
+            color: #10b981;
+        }
+
+        /* QBSkin: Charts */
+        .chart-container {
+            background: white;
+            border: 1px solid #e0d8d1;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .chart-container h2 {
+            margin-bottom: 16px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+        }
+
+        .chart-loading {
+            text-align: center;
+            color: #8a7e76;
+            padding: 40px 0;
+        }
+
+        .chart-empty {
+            text-align: center;
+            color: #8a7e76;
+            padding: 40px 16px;
+            font-size: 14px;
+        }
+
+        /* QBSkin: Snapshot Watermark */
+        .snapshot-watermark {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 16px;
+            font-size: 11px;
+            color: #8a7e76;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #e0d8d1;
+            z-index: 10;
+        }
+
+        .snapshot-mode .snapshot-watermark {
+            display: block;
+        }
+
+        /* QBSkin: Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(64px + max(0px, env(safe-area-inset-bottom)));
+            background: white;
+            border-top: 1px solid #e0d8d1;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: max(0px, env(safe-area-inset-bottom));
+            z-index: 200;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+        }
+
+        .snapshot-mode .bottom-nav {
+            display: none;
+        }
+
+        .nav-item {
+            flex: 1;
+            height: 56px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: #8a7e76;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #1e293b;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* QBSkin: Loading & Error States */
+        .error-banner {
+            background: #fecaca;
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            color: #7f1d1d;
+            font-size: 13px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #1a5632;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* QBSkin: Responsive */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .header {
+                padding-top: max(12px, env(safe-area-inset-top) + 8px);
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .content {
+                padding: 12px;
+            }
+
+            .kpi-grid {
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+
+            .kpi-card {
+                padding: 12px;
+            }
+
+            .kpi-value {
+                font-size: 24px;
+            }
+
+            .chart-container {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .chart-wrapper {
+                min-height: 260px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- QBSkin: Header Section -->
+    <div class="header">
+        <div class="header-title">
+            <h1>Trends & Insights</h1>
+        </div>
+        <div class="header-controls">
+            <button class="btn-icon" id="btn-refresh" title="Refresh Data">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36M20.49 15a9 9 0 0 1-14.85 3.36"></path>
+                </svg>
+            </button>
+            <button class="btn-icon" id="btn-snapshot" title="Snapshot Mode">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <!-- QBSkin: Period Selector -->
+    <div class="period-selector">
+        <div class="period-chips">
+            <button class="chip" data-period="week">This Week</button>
+            <button class="chip active" data-period="month">This Month</button>
+            <button class="chip" data-period="last30">Last 30 Days</button>
+            <button class="chip" data-period="last90">Last 90 Days</button>
+            <button class="chip" data-period="ytd">YTD</button>
+            <button class="chip" data-period="custom">Custom</button>
+        </div>
+        <div class="date-inputs" id="date-inputs">
+            <input type="date" id="date-from" placeholder="From">
+            <input type="date" id="date-to" placeholder="To">
+        </div>
+    </div>
+
+    <!-- QBSkin: Main Content -->
+    <div class="content">
+        <!-- Error Banner -->
+        <div id="error-banner"></div>
+
+        <!-- KPI Summary Grid -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Sales</div>
+                <div class="kpi-value" id="kpi-sales">—</div>
+                <div class="kpi-sub" id="kpi-sales-sub">— kW</div>
+            </div>
+            <div class="kpi-card" id="kca-card">
+                <div class="kpi-label">KCA Rate</div>
+                <div class="kpi-value" id="kpi-kca">—</div>
+                <div class="kpi-sub">Intake Completed</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Avg Days to Install</div>
+                <div class="kpi-value" id="kpi-days">—</div>
+                <div class="kpi-sub">From Sale to Install</div>
+            </div>
+            <div class="kpi-card" id="install-card">
+                <div class="kpi-label">Install Completion</div>
+                <div class="kpi-value" id="kpi-install">—</div>
+                <div class="kpi-sub">Projects Completed</div>
+            </div>
+        </div>
+
+        <!-- Chart 1: Sales by Week -->
+        <div class="chart-container">
+            <h2>Sales by Week</h2>
+            <div class="chart-wrapper">
+                <svg id="sales-chart" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">
+                    <text x="400" y="150" text-anchor="middle" fill="#8a7e76" font-size="14">
+                        <tspan x="400" dy="0">Loading data...</tspan>
+                    </text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Chart 2: Milestone Completion Funnel -->
+        <div class="chart-container">
+            <h2>Milestone Completion Funnel</h2>
+            <div class="chart-wrapper">
+                <svg id="funnel-chart" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">
+                    <text x="400" y="150" text-anchor="middle" fill="#8a7e76" font-size="14">
+                        <tspan x="400" dy="0">Loading data...</tspan>
+                    </text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Chart 3: Average Days in Stage -->
+        <div class="chart-container">
+            <h2>Average Days in Stage</h2>
+            <div class="chart-wrapper">
+                <svg id="days-chart" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
+                    <text x="400" y="100" text-anchor="middle" fill="#8a7e76" font-size="14">
+                        <tspan x="400" dy="0">Loading data...</tspan>
+                    </text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Chart 4: KCA Rate Trend Line -->
+        <div class="chart-container">
+            <h2>KCA Rate Trend</h2>
+            <div class="chart-wrapper">
+                <svg id="kca-chart" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">
+                    <text x="400" y="150" text-anchor="middle" fill="#8a7e76" font-size="14">
+                        <tspan x="400" dy="0">Loading data...</tspan>
+                    </text>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- QBSkin: Snapshot Watermark -->
+    <div class="snapshot-watermark" id="watermark">
+        Kin Home · Mar 10, 2026 2:30 PM
+    </div>
+
+    <!-- QBSkin: Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=cc-quick-glance.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-project-detail.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            <span>Projects</span>
+        </a>
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-tasks.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 5.18L10.59 16.6l-4.24-4.24 1.41-1.41 2.83 2.83 10-10L22 5.18zM19.79 10.22C19.92 10.79 20 11.39 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8c1.58 0 3.04.46 4.28 1.25l1.44-1.44A9.9 9.9 0 0012 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-1.19-.22-2.33-.6-3.39l-1.61 1.61z"/>
+            </svg>
+            <span>Tasks</span>
+        </a>
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-labor.html" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            <span>Labor</span>
+        </a>
+        <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-trends.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
+            </svg>
+            <span>Trends</span>
+        </a>
+    </nav>
+
+    <script>
+        // QBSkin: Configuration
+        const CONFIG = {
+            realm: 'kin.quickbase.com',
+            appId: 'br9kwm8bk',
+            token: 'b6teb3_p3bs_0_bzh28isbyba5yh9ujb73hqthh5',
+            projectsTableId: 'br9kwm8na'
+        };
+
+        const API_HEADERS = {
+            'QB-Realm-Hostname': 'kin.quickbase.com',
+            'Authorization': 'QB-USER-TOKEN b6teb3_p3bs_0_bzh28isbyba5yh9ujb73hqthh5',
+            'Content-Type': 'application/json'
+        };
+
+        // QBSkin: Field IDs (cache)
+        let fieldMap = {};
+        let allProjectData = [];
+        let currentPeriod = 'month';
+
+        // QBSkin: Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            fetchFieldMetadata();
+            loadData();
+        });
+
+        // QBSkin: Event Listeners
+        function initializeEventListeners() {
+            // Period selector chips
+            document.querySelectorAll('.chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    currentPeriod = this.dataset.period;
+
+                    const dateInputs = document.getElementById('date-inputs');
+                    if (currentPeriod === 'custom') {
+                        dateInputs.classList.add('show');
+                    } else {
+                        dateInputs.classList.remove('show');
+                    }
+
+                    loadData();
+                });
+            });
+
+            // Date inputs for custom period
+            ['date-from', 'date-to'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    loadData();
+                });
+            });
+
+            // Snapshot mode toggle
+            document.getElementById('btn-snapshot').addEventListener('click', function() {
+                document.body.classList.toggle('snapshot-mode');
+            });
+
+            // Refresh button
+            document.getElementById('btn-refresh').addEventListener('click', function() {
+                this.style.animation = 'spin 0.8s linear';
+                setTimeout(() => {
+                    this.style.animation = '';
+                    loadData();
+                }, 300);
+            });
+        }
+
+        // QBSkin: API - Fetch Field Metadata
+        async function fetchFieldMetadata() {
+            try {
+                const response = await fetch(
+                    `https://api.quickbase.com/v1/fields?tableId=${CONFIG.projectsTableId}`,
+                    { headers: API_HEADERS }
+                );
+                if (!response.ok) throw new Error('Field metadata fetch failed');
+                const data = await response.json();
+
+                // Build field map
+                data.forEach(field => {
+                    fieldMap[field.label] = field.id;
+                });
+
+                console.log('Field map loaded:', fieldMap);
+            } catch (error) {
+                console.error('Field metadata error:', error);
+                showError('Failed to load field configuration');
+            }
+        }
+
+        // QBSkin: API - Load Project Data
+        async function loadData() {
+            try {
+                const dateRange = getDateRange();
+                const whereClause = buildWhereClause(dateRange);
+
+                // Construct query
+                const queryPayload = {
+                    from: CONFIG.projectsTableId,
+                    select: [
+                        3,      // Record ID
+                        522,    // Sales Date
+                        145,    // Customer Name
+                        13,     // System Size (kW)
+                        255,    // Status
+                        165,    // Survey Approved Date
+                        208,    // Permit Approved
+                        315,    // Design Completed
+                        327,    // NEM Approved Date
+                        461,    // Intake Completed Date
+                        534,    // Install Completed Date
+                        538,    // PTO Approved Date
+                        969,    // Site Survey Scheduled
+                        1458    // Inspection
+                    ],
+                    where: whereClause,
+                    options: { top: 2000 }
+                };
+
+                const response = await fetch(
+                    'https://api.quickbase.com/v1/records/query',
+                    {
+                        method: 'POST',
+                        headers: API_HEADERS,
+                        body: JSON.stringify(queryPayload)
+                    }
+                );
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || 'Query failed');
+                }
+
+                const data = await response.json();
+                allProjectData = data.data || [];
+
+                clearError();
+                processAndRender();
+            } catch (error) {
+                console.error('Data load error:', error);
+                showError('Error loading data: ' + error.message);
+            }
+        }
+
+        // QBSkin: Date Range Logic
+        function getDateRange() {
+            const today = new Date();
+            let from, to;
+            to = today;
+
+            switch (currentPeriod) {
+                case 'week':
+                    const dayOfWeek = today.getDay();
+                    from = new Date(today);
+                    from.setDate(today.getDate() - dayOfWeek);
+                    break;
+                case 'month':
+                    from = new Date(today.getFullYear(), today.getMonth(), 1);
+                    break;
+                case 'last30':
+                    from = new Date(today);
+                    from.setDate(today.getDate() - 30);
+                    break;
+                case 'last90':
+                    from = new Date(today);
+                    from.setDate(today.getDate() - 90);
+                    break;
+                case 'ytd':
+                    from = new Date(today.getFullYear(), 0, 1);
+                    break;
+                case 'custom':
+                    const fromInput = document.getElementById('date-from').value;
+                    const toInput = document.getElementById('date-to').value;
+                    from = fromInput ? new Date(fromInput) : new Date(today.getFullYear(), 0, 1);
+                    to = toInput ? new Date(toInput) : today;
+                    break;
+                default:
+                    from = new Date(today.getFullYear(), today.getMonth(), 1);
+            }
+
+            return { from, to };
+        }
+
+        // QBSkin: Build QB Where Clause
+        function buildWhereClause(dateRange) {
+            const fromStr = dateRange.from.toISOString().split('T')[0];
+            const toStr = dateRange.to.toISOString().split('T')[0];
+            // Sales Date field ID: FID 522
+            return `{'522'.AF.'${fromStr}'}AND{'522'.BF.'${toStr}'}`;
+        }
+
+        // QBSkin: Data Processing & Aggregation
+        function processAndRender() {
+            if (allProjectData.length === 0) {
+                showError('No projects found for this period');
+                return;
+            }
+
+            // Extract field values from QB response
+            // QB API returns: record[fieldId] = {value: x} or primitive
+            function qbv(record, fid) {
+                var f = record[fid];
+                if (!f) return '';
+                return (typeof f === 'object' && f.value !== undefined) ? f.value : f;
+            }
+
+            const projects = allProjectData.map(record => {
+                return {
+                    id: qbv(record, 3),
+                    saleDate: parseQBDate(qbv(record, 522)),
+                    customer: qbv(record, 145),
+                    systemKw: parseFloat(qbv(record, 13)) || 0,
+                    status: qbv(record, 255),
+                    surveyScheduled: parseQBDate(qbv(record, 969)),
+                    surveyApproved: parseQBDate(qbv(record, 165)),
+                    designCompleted: parseQBDate(qbv(record, 315)),
+                    nemApproved: parseQBDate(qbv(record, 327)),
+                    permitApproved: parseQBDate(qbv(record, 208)),
+                    installCompleted: parseQBDate(qbv(record, 534)),
+                    inspection: parseQBDate(qbv(record, 1458)),
+                    ptoApproved: parseQBDate(qbv(record, 538)),
+                    intakeCompleted: parseQBDate(qbv(record, 461))
+                };
+            });
+
+            // Calculate KPIs
+            const kpis = calculateKPIs(projects);
+            renderKPICards(kpis);
+
+            // Aggregate by week
+            const weeklyData = aggregateByWeek(projects);
+            renderSalesChart(weeklyData);
+
+            // Milestone funnel
+            const funnel = calculateFunnel(projects);
+            renderFunnelChart(funnel);
+
+            // Days in stage
+            const daysInStage = calculateDaysInStage(projects);
+            renderDaysChart(daysInStage);
+
+            // KCA trend
+            const kcaTrend = calculateKCATrend(projects);
+            renderKCAChart(kcaTrend);
+        }
+
+        // QBSkin: Parse QB Date Format
+        function parseQBDate(value) {
+            if (!value) return null;
+            try {
+                return new Date(value);
+            } catch {
+                return null;
+            }
+        }
+
+        // QBSkin: Calculate KPIs
+        function calculateKPIs(projects) {
+            const totalCount = projects.length;
+            const totalKw = projects.reduce((sum, p) => sum + p.systemKw, 0);
+            const intakeCount = projects.filter(p => p.intakeCompleted).length;
+            const kcaRate = totalCount > 0 ? Math.round((intakeCount / totalCount) * 100) : 0;
+            const installCount = projects.filter(p => p.installCompleted).length;
+            const installRate = totalCount > 0 ? Math.round((installCount / totalCount) * 100) : 0;
+
+            // Avg days to install
+            const projectsWithInstall = projects.filter(p => p.saleDate && p.installCompleted);
+            const avgDaysToInstall = projectsWithInstall.length > 0
+                ? Math.round(
+                    projectsWithInstall.reduce((sum, p) => {
+                        const days = Math.floor((p.installCompleted - p.saleDate) / (1000 * 60 * 60 * 24));
+                        return sum + days;
+                    }, 0) / projectsWithInstall.length
+                )
+                : 0;
+
+            return {
+                totalCount,
+                totalKw: Math.round(totalKw),
+                kcaRate,
+                installRate,
+                avgDaysToInstall
+            };
+        }
+
+        // QBSkin: Render KPI Cards
+        function renderKPICards(kpis) {
+            document.getElementById('kpi-sales').textContent = kpis.totalCount;
+            document.getElementById('kpi-sales-sub').textContent = `${kpis.totalKw} kW`;
+
+            const kcaCard = document.getElementById('kca-card');
+            document.getElementById('kpi-kca').textContent = `${kpis.kcaRate}%`;
+            kcaCard.classList.remove('warning', 'danger', 'success');
+            if (kpis.kcaRate >= 80) {
+                kcaCard.classList.add('success');
+            } else if (kpis.kcaRate >= 60) {
+                kcaCard.classList.add('warning');
+            } else {
+                kcaCard.classList.add('danger');
+            }
+
+            document.getElementById('kpi-days').textContent = `${kpis.avgDaysToInstall} days`;
+
+            const installCard = document.getElementById('install-card');
+            document.getElementById('kpi-install').textContent = `${kpis.installRate}%`;
+            installCard.classList.remove('warning', 'danger', 'success');
+            if (kpis.installRate >= 80) {
+                installCard.classList.add('success');
+            } else if (kpis.installRate >= 60) {
+                installCard.classList.add('warning');
+            } else {
+                installCard.classList.add('danger');
+            }
+        }
+
+        // QBSkin: Aggregate by Week
+        function aggregateByWeek(projects) {
+            const weekMap = {};
+
+            projects.forEach(p => {
+                if (!p.saleDate) return;
+                const week = getWeekLabel(p.saleDate);
+                if (!weekMap[week]) {
+                    weekMap[week] = 0;
+                }
+                weekMap[week]++;
+            });
+
+            return Object.entries(weekMap)
+                .sort((a, b) => new Date(a[0]) - new Date(b[0]))
+                .map(([week, count]) => ({ label: week, value: count }));
+        }
+
+        // QBSkin: Get Week Label
+        function getWeekLabel(date) {
+            const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.getMonth()];
+            return `${month} ${date.getDate()}`;
+        }
+
+        // QBSkin: Calculate Milestone Funnel
+        function calculateFunnel(projects) {
+            const milestones = [
+                { name: 'Sale', check: p => p.saleDate },
+                { name: 'Intake', check: p => p.intakeCompleted },
+                { name: 'Survey', check: p => p.surveyApproved },
+                { name: 'Design', check: p => p.designCompleted },
+                { name: 'NEM', check: p => p.nemApproved },
+                { name: 'Permit', check: p => p.permitApproved },
+                { name: 'Install', check: p => p.installCompleted },
+                { name: 'Inspection', check: p => p.inspection },
+                { name: 'PTO', check: p => p.ptoApproved }
+            ];
+
+            return milestones.map(m => ({
+                name: m.name,
+                count: projects.filter(m.check).length
+            }));
+        }
+
+        // QBSkin: Calculate Days in Stage
+        function calculateDaysInStage(projects) {
+            const stages = [
+                { name: 'Survey', start: p => p.intakeCompleted, end: p => p.surveyApproved },
+                { name: 'Design', start: p => p.surveyApproved, end: p => p.designCompleted },
+                { name: 'NEM', start: p => p.designCompleted, end: p => p.nemApproved },
+                { name: 'Permit', start: p => p.nemApproved, end: p => p.permitApproved },
+                { name: 'Install', start: p => p.permitApproved, end: p => p.installCompleted },
+                { name: 'Inspection', start: p => p.installCompleted, end: p => p.inspection },
+                { name: 'PTO', start: p => p.inspection, end: p => p.ptoApproved }
+            ];
+
+            return stages.map(s => {
+                const projectsWithBoth = projects.filter(p => s.start(p) && s.end(p));
+                const avgDays = projectsWithBoth.length > 0
+                    ? Math.round(
+                        projectsWithBoth.reduce((sum, p) => {
+                            const start = s.start(p);
+                            const end = s.end(p);
+                            return sum + Math.floor((end - start) / (1000 * 60 * 60 * 24));
+                        }, 0) / projectsWithBoth.length
+                    )
+                    : 0;
+                return { name: s.name, days: avgDays };
+            });
+        }
+
+        // QBSkin: Calculate KCA Trend
+        function calculateKCATrend(projects) {
+            const weekMap = {};
+
+            projects.forEach(p => {
+                if (!p.saleDate) return;
+                const week = getWeekLabel(p.saleDate);
+                if (!weekMap[week]) {
+                    weekMap[week] = { total: 0, intake: 0 };
+                }
+                weekMap[week].total++;
+                if (p.intakeCompleted) {
+                    weekMap[week].intake++;
+                }
+            });
+
+            return Object.entries(weekMap)
+                .sort((a, b) => new Date(a[0]) - new Date(b[0]))
+                .map(([week, data]) => ({
+                    label: week,
+                    value: data.total > 0 ? Math.round((data.intake / data.total) * 100) : 0
+                }));
+        }
+
+        // QBSkin: Render Sales Chart (SVG Bar Chart)
+        function renderSalesChart(weeklyData) {
+            const svg = document.getElementById('sales-chart');
+            if (weeklyData.length === 0) {
+                svg.innerHTML = '<text x="400" y="150" text-anchor="middle" fill="#8a7e76">No data available</text>';
+                return;
+            }
+
+            const maxValue = Math.max(...weeklyData.map(d => d.value), 1);
+            const padding = { top: 20, right: 20, bottom: 40, left: 40 };
+            const width = 800 - padding.left - padding.right;
+            const height = 300 - padding.top - padding.bottom;
+            const barWidth = width / weeklyData.length * 0.7;
+            const barGap = width / weeklyData.length;
+
+            let html = '';
+
+            // Y-axis
+            html += `<line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${padding.top + height}" stroke="#e0d8d1" stroke-width="1"/>`;
+
+            // X-axis
+            html += `<line x1="${padding.left}" y1="${padding.top + height}" x2="${800 - padding.right}" y2="${padding.top + height}" stroke="#e0d8d1" stroke-width="1"/>`;
+
+            // Grid lines and Y-axis labels
+            for (let i = 0; i <= 5; i++) {
+                const value = Math.round((maxValue / 5) * i);
+                const y = padding.top + height - (i / 5) * height;
+                html += `<line x1="${padding.left}" y1="${y}" x2="${800 - padding.right}" y2="${y}" stroke="#f7f3f0" stroke-width="1"/>`;
+                html += `<text x="${padding.left - 8}" y="${y + 4}" text-anchor="end" font-size="12" fill="#8a7e76">${value}</text>`;
+            }
+
+            // Bars
+            weeklyData.forEach((item, index) => {
+                const x = padding.left + index * barGap + (barGap - barWidth) / 2;
+                const barHeight = (item.value / maxValue) * height;
+                const y = padding.top + height - barHeight;
+
+                // Bar
+                html += `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" fill="#1a5632" rx="4"/>`;
+
+                // Value on top
+                html += `<text x="${x + barWidth / 2}" y="${y - 6}" text-anchor="middle" font-size="12" font-weight="600" fill="#2c2420">${item.value}</text>`;
+
+                // X-axis label
+                html += `<text x="${x + barWidth / 2}" y="${padding.top + height + 20}" text-anchor="middle" font-size="12" fill="#6b6058">${item.label}</text>`;
+            });
+
+            svg.innerHTML = html;
+        }
+
+        // QBSkin: Render Funnel Chart
+        function renderFunnelChart(funnel) {
+            const svg = document.getElementById('funnel-chart');
+            if (funnel.length === 0) {
+                svg.innerHTML = '<text x="400" y="150" text-anchor="middle" fill="#8a7e76">No data available</text>';
+                return;
+            }
+
+            const maxCount = Math.max(...funnel.map(f => f.count), 1);
+            const padding = { top: 20, right: 20, bottom: 20, left: 20 };
+            const width = 800 - padding.left - padding.right;
+            const height = 300 - padding.top - padding.bottom;
+            const barHeight = height / funnel.length;
+
+            let html = '';
+
+            funnel.forEach((item, index) => {
+                const ratio = item.count / maxCount;
+                const barWidth = width * ratio;
+                const y = padding.top + index * barHeight;
+                const colorIntensity = 255 - Math.floor(ratio * 100);
+                const fill = `rgb(26, 86, 50)`;
+
+                // Bar
+                html += `<rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight * 0.8}" fill="${fill}" opacity="${0.5 + ratio * 0.5}"/>`;
+
+                // Label
+                html += `<text x="${padding.left + barWidth + 8}" y="${y + barHeight * 0.4 + 5}" font-size="12" fill="#2c2420">${item.name}</text>`;
+
+                // Count and percentage
+                const percentage = Math.round((item.count / maxCount) * 100);
+                html += `<text x="${padding.left + barWidth - 8}" y="${y + barHeight * 0.4 + 5}" text-anchor="end" font-size="11" font-weight="600" fill="white">${item.count} (${percentage}%)</text>`;
+            });
+
+            svg.innerHTML = html;
+        }
+
+        // QBSkin: Render Days in Stage Chart (Horizontal Stacked Bar)
+        function renderDaysChart(stages) {
+            const svg = document.getElementById('days-chart');
+            if (stages.length === 0) {
+                svg.innerHTML = '<text x="400" y="100" text-anchor="middle" fill="#8a7e76">No data available</text>';
+                return;
+            }
+
+            const totalDays = stages.reduce((sum, s) => sum + s.days, 0);
+            const colors = ['#1a5632', '#2a7a4a', '#d4a574', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'];
+
+            let html = '';
+            let currentX = 50;
+            const barY = 50;
+            const barHeight = 30;
+            const maxWidth = 700;
+
+            stages.forEach((stage, index) => {
+                if (totalDays === 0) return;
+                const segmentWidth = (stage.days / totalDays) * maxWidth;
+                const color = colors[index % colors.length];
+
+                // Segment
+                html += `<rect x="${currentX}" y="${barY}" width="${segmentWidth}" height="${barHeight}" fill="${color}"/>`;
+
+                // Label (if segment is wide enough)
+                if (segmentWidth > 40) {
+                    html += `<text x="${currentX + segmentWidth / 2}" y="${barY + barHeight / 2 + 5}" text-anchor="middle" font-size="11" font-weight="600" fill="white">${stage.days}d</text>`;
+                }
+
+                currentX += segmentWidth;
+            });
+
+            // Total days label
+            html += `<text x="${currentX + 8}" y="${barY + barHeight / 2 + 5}" font-size="12" font-weight="600" fill="#2c2420">${totalDays} days</text>`;
+
+            // Legend
+            let legendY = 100;
+            stages.forEach((stage, index) => {
+                const color = colors[index % colors.length];
+                html += `<rect x="50" y="${legendY}" width="12" height="12" fill="${color}"/>`;
+                html += `<text x="70" y="${legendY + 10}" font-size="11" fill="#6b6058">${stage.name}</text>`;
+                legendY += 18;
+            });
+
+            svg.innerHTML = html;
+        }
+
+        // QBSkin: Render KCA Trend Line Chart
+        function renderKCAChart(kcaTrend) {
+            const svg = document.getElementById('kca-chart');
+            if (kcaTrend.length === 0) {
+                svg.innerHTML = '<text x="400" y="150" text-anchor="middle" fill="#8a7e76">No data available</text>';
+                return;
+            }
+
+            const padding = { top: 20, right: 20, bottom: 40, left: 40 };
+            const width = 800 - padding.left - padding.right;
+            const height = 300 - padding.top - padding.bottom;
+            const pointSpacing = width / (kcaTrend.length - 1 || 1);
+
+            let html = '';
+
+            // Y-axis
+            html += `<line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${padding.top + height}" stroke="#e0d8d1" stroke-width="1"/>`;
+
+            // X-axis
+            html += `<line x1="${padding.left}" y1="${padding.top + height}" x2="${800 - padding.right}" y2="${padding.top + height}" stroke="#e0d8d1" stroke-width="1"/>`;
+
+            // Y-axis grid and labels (0-100%)
+            for (let i = 0; i <= 5; i++) {
+                const value = i * 20;
+                const y = padding.top + height - (i / 5) * height;
+                html += `<line x1="${padding.left}" y1="${y}" x2="${800 - padding.right}" y2="${y}" stroke="#f7f3f0" stroke-width="1"/>`;
+                html += `<text x="${padding.left - 8}" y="${y + 4}" text-anchor="end" font-size="12" fill="#8a7e76">${value}%</text>`;
+            }
+
+            // 80% target line
+            const targetY = padding.top + height - (0.8) * height;
+            html += `<line x1="${padding.left}" y1="${targetY}" x2="${800 - padding.right}" y2="${targetY}" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4" opacity="0.6"/>`;
+            html += `<text x="${padding.left - 8}" y="${targetY - 4}" text-anchor="end" font-size="11" fill="#f59e0b" font-weight="600">80%</text>`;
+
+            // Build path data
+            let pathData = '';
+            let fillData = `M ${padding.left} ${padding.top + height}`;
+
+            kcaTrend.forEach((item, index) => {
+                const x = padding.left + index * pointSpacing;
+                const barHeight = (item.value / 100) * height;
+                const y = padding.top + height - barHeight;
+
+                if (index === 0) {
+                    pathData += `M ${x} ${y}`;
+                    fillData += ` L ${x} ${y}`;
+                } else {
+                    pathData += ` L ${x} ${y}`;
+                    fillData += ` L ${x} ${y}`;
+                }
+            });
+
+            fillData += ` L ${padding.left + (kcaTrend.length - 1) * pointSpacing} ${padding.top + height} Z`;
+
+            // Fill area under line
+            html += `<path d="${fillData}" fill="#1a5632" opacity="0.1"/>`;
+
+            // Line
+            html += `<path d="${pathData}" stroke="#1a5632" stroke-width="2" fill="none"/>`;
+
+            // Data points
+            kcaTrend.forEach((item, index) => {
+                const x = padding.left + index * pointSpacing;
+                const barHeight = (item.value / 100) * height;
+                const y = padding.top + height - barHeight;
+
+                html += `<circle cx="${x}" cy="${y}" r="4" fill="#1a5632" stroke="white" stroke-width="2"/>`;
+
+                // X-axis label
+                html += `<text x="${x}" y="${padding.top + height + 20}" text-anchor="middle" font-size="12" fill="#6b6058">${item.label}</text>`;
+            });
+
+            svg.innerHTML = html;
+        }
+
+        // QBSkin: Error Handling
+        function showError(message) {
+            const banner = document.getElementById('error-banner');
+            banner.innerHTML = `<div class="error-banner">${message}</div>`;
+        }
+
+        function clearError() {
+            document.getElementById('error-banner').innerHTML = '';
+        }
+
+        // QBSkin: Data extraction helper for QB response
+        // QB API returns nested structure: record.6 contains all fields with FID as key
+        // Adjust based on actual QB response format
+    </script>
+</body>
+</html>

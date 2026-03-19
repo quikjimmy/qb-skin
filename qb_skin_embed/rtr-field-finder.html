@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>RTR Field Finder</title>
+<style>
+  body { font-family: monospace; background: #0f172a; color: #e2e8f0; padding: 20px; }
+  h2 { color: #38bdf8; }
+  .field { padding: 6px 10px; margin: 3px 0; border-radius: 4px; background: #1e293b; }
+  .fid { color: #f59e0b; font-weight: bold; min-width: 60px; display: inline-block; }
+  .type { color: #94a3b8; min-width: 160px; display: inline-block; }
+  .label { color: #e2e8f0; }
+  .section { margin-top: 20px; }
+  .section-title { color: #34d399; font-size: 14px; font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #334155; padding-bottom: 4px; }
+  .error { color: #f87171; }
+  button { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+  button:hover { background: #2563eb; }
+</style>
+</head>
+<body>
+<h2>QB RTR Field Finder — ArrivyTasks</h2>
+<button onclick="run()">Fetch Fields</button>
+<div id="out" style="margin-top:20px;"></div>
+<script>
+async function run() {
+  const out = document.getElementById('out');
+  out.innerHTML = 'Loading...';
+  try {
+    const res = await fetch('https://api.quickbase.com/v1/fields?tableId=bvbqgs5yc', {
+      headers: {
+        'QB-Realm-Hostname': 'kin.quickbase.com',
+        'Authorization': 'QB-USER-TOKEN b6teb3_p3bs_0_bzh28isbyba5yh9ujb73hqthh5',
+        'Content-Type': 'application/json'
+      }
+    });
+    const fields = await res.json();
+    if (!Array.isArray(fields)) { out.innerHTML = '<div class="error">Error: ' + JSON.stringify(fields) + '</div>'; return; }
+
+    const rtr = fields.filter(f => /rtr/i.test(f.label));
+    const maxRtr = fields.filter(f => /max.*rtr|rtr.*max/i.test(f.label));
+    const allMax = fields.filter(f => /^max\s/i.test(f.label));
+
+    function renderGroup(title, list) {
+      if (!list.length) return `<div class="section"><div class="section-title">${title} — none found</div></div>`;
+      return `<div class="section">
+        <div class="section-title">${title} (${list.length} fields)</div>
+        ${list.map(f => `<div class="field"><span class="fid">FID ${f.id}</span><span class="type">${f.fieldType}</span><span class="label">${f.label}</span></div>`).join('')}
+      </div>`;
+    }
+
+    out.innerHTML =
+      renderGroup('Max RTR fields (max + rtr in label)', maxRtr) +
+      renderGroup('All RTR fields', rtr) +
+      renderGroup('All Max... fields (for context)', allMax) +
+      `<div class="section"><div class="section-title">Total fields in table: ${fields.length}</div></div>`;
+  } catch(e) {
+    out.innerHTML = '<div class="error">Fetch error: ' + e.message + '</div>';
+  }
+}
+</script>
+</body>
+</html>

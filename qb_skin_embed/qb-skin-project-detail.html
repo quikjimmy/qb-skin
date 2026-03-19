@@ -1,0 +1,2679 @@
+<!-- ============================================
+     QBSkin Mobile Suite — Project Detail
+     Part of: QuickBase Mobile Skin Build
+     Version: 1.0
+     Last Updated: 2026-03-10
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Project Detail — QBSkin</title>
+    <style>
+        /* ========================================
+           Base Styles & Reset
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f7f3f0;
+            color: #2c2420;
+            overflow-x: hidden;
+        }
+
+        /* ========================================
+           QBSkin Color Palette (Inline)
+           ======================================== */
+        :root {
+            --primary: #1a5632;
+            --primary-light: #2a7a4a;
+            --warm: #cec4bc;
+            --warm-light: #e8e2dc;
+            --warm-lighter: #f7f3f0;
+            --text: #2c2420;
+            --text-muted: #8a7e76;
+            --border: #e0d8d1;
+            --status-success: #10b981;
+            --status-warning: #f59e0b;
+            --status-danger: #ef4444;
+            --status-info: #3b82f6;
+            --status-purple: #8b5cf6;
+            --status-grey: #9ca3af;
+        }
+
+        /* ========================================
+           Layout Structure
+           ======================================== */
+        body {
+            display: flex;
+            flex-direction: column;
+            padding-top: 0;
+            padding-left: max(12px, env(safe-area-inset-left));
+            padding-right: max(12px, env(safe-area-inset-right));
+            padding-bottom: 24px;
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* ========================================
+           Header Bar
+           ======================================== */
+        .qb-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            background: #1e293b;
+            color: #ffffff;
+            z-index: 100;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+
+        .qb-header-spacer {
+            height: calc(72px + env(safe-area-inset-top, 0px));
+        }
+
+        .qb-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qb-back-button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(255,255,255,0.12);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 18px;
+            transition: background 0.2s;
+        }
+
+        .qb-back-button:active {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .qb-header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        .qb-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        /* ========================================
+           Loading State
+           ======================================== */
+        .qb-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .qb-spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--warm-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========================================
+           Error State
+           ======================================== */
+        .qb-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            color: #991b1b;
+            font-size: 14px;
+        }
+
+        /* ========================================
+           Cards & Containers
+           ======================================== */
+        .qb-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        /* ========================================
+           Project Summary Card
+           ======================================== */
+        .qb-project-summary {
+            background: #ffffff;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--primary);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .qb-customer-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            color: var(--text);
+        }
+
+        .qb-summary-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .qb-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .qb-pill-status {
+            background: #1e293b;
+            color: #ffffff;
+            border: none;
+        }
+
+        .qb-pill-state {
+            background: var(--warm-light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .qb-age-indicator {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ========================================
+           Key Info Card
+           ======================================== */
+        .qb-key-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .qb-key-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .qb-key-info-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .qb-key-info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            word-break: break-word;
+        }
+
+        /* ========================================
+           Milestone Timeline
+           ======================================== */
+        .qb-milestone-section h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            padding: 0 16px;
+        }
+
+        .qb-milestone-row {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--warm-lighter);
+            align-items: flex-start;
+        }
+
+        .qb-milestone-row:last-child {
+            border-bottom: none;
+        }
+
+        .qb-milestone-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .qb-milestone-dot.completed {
+            background: var(--status-success);
+        }
+
+        .qb-milestone-dot.in-progress {
+            background: var(--status-warning);
+        }
+
+        .qb-milestone-dot.scheduled {
+            background: var(--status-info);
+        }
+
+        .qb-milestone-dot.not-started {
+            background: var(--status-grey);
+        }
+
+        .qb-milestone-dot.rejected {
+            background: var(--status-danger);
+        }
+        .qb-milestone-dot.submitted {
+            background: var(--status-warning);
+        }
+        .qb-milestone-dot.approved {
+            background: var(--status-success);
+        }
+        .qb-milestone-dot.service {
+            background: var(--status-purple);
+            position: relative;
+        }
+        .qb-milestone-dot.service::after {
+            content: 'S';
+            position: absolute;
+            top: -1px;
+            left: 3px;
+            font-size: 8px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .qb-next-up {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+        .qb-next-up-icon {
+            font-size: 18px;
+        }
+        .qb-next-up-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #3b82f6;
+        }
+        .qb-next-up-value {
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .qb-milestone-content {
+            flex: 1;
+        }
+
+        .qb-milestone-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .qb-milestone-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .qb-milestone-days {
+            font-size: 11px;
+            color: var(--status-grey);
+            font-weight: 500;
+        }
+
+        /* ========================================
+           Related Events Section
+           ======================================== */
+        .qb-event-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--warm-lighter);
+        }
+
+        .qb-event-item:last-child {
+            border-bottom: none;
+        }
+
+        .qb-event-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .qb-event-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .qb-event-status-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        .qb-event-status-chip.arrived {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .qb-event-status-chip.en-route {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .qb-event-status-chip.submitted {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .qb-event-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ========================================
+           Notes Section
+           ======================================== */
+        .qb-notes-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .qb-notes-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qb-notes-toggle {
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .qb-notes-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .qb-notes-body {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease;
+            max-height: 2000px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .qb-notes-body.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .qb-notes-count {
+            background: var(--warm-light);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .qb-notes-placeholder {
+            padding: 16px;
+            background: var(--warm-lighter);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .qb-note-entry {
+            padding: 12px;
+            background: var(--warm-lighter);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .qb-note-entry-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .qb-note-entry-author {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .qb-note-entry-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .qb-note-entry-category {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--warm-light);
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .qb-add-note-button {
+            display: inline-block;
+            padding: 4px 0;
+            background: none;
+            color: var(--text-muted);
+            border: none;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 4px;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .qb-add-note-button:active {
+            color: var(--text);
+        }
+
+        /* ========================================
+           Inline Note Form
+           ======================================== */
+        .qb-note-form {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease;
+            opacity: 0;
+        }
+        .qb-note-form.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+        .qb-note-form-inner {
+            padding: 12px;
+            background: var(--warm-lighter);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .qb-note-form-inner textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text);
+            resize: vertical;
+            background: #fff;
+        }
+        .qb-note-form-inner textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .qb-note-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .qb-note-form-row select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: #fff;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            padding-right: 24px;
+        }
+        .qb-note-form-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .qb-note-form-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+        .qb-note-save-btn {
+            background: var(--primary);
+            color: #fff;
+        }
+        .qb-note-save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .qb-note-save-btn:active:not(:disabled) {
+            opacity: 0.8;
+        }
+        .qb-note-cancel-btn {
+            background: var(--warm-light);
+            color: var(--text-muted);
+        }
+
+        /* ========================================
+           Quick Actions Row
+           ======================================== */
+        .qb-actions-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .qb-action-button {
+            padding: 12px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .qb-action-button:active {
+            background: var(--primary-light);
+        }
+
+        .qb-action-button.secondary {
+            background: var(--warm-light);
+            color: var(--primary);
+        }
+
+        .qb-action-button.secondary:active {
+            background: var(--warm);
+        }
+
+        /* ========================================
+           Status Dropdown
+           ======================================== */
+        .qb-status-dropdown {
+            position: absolute;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            min-width: 200px;
+        }
+
+        .qb-status-option {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--warm-lighter);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text);
+            transition: background 0.15s;
+        }
+
+        .qb-status-option:last-child {
+            border-bottom: none;
+        }
+
+        .qb-status-option:active {
+            background: var(--warm-lighter);
+        }
+
+        /* ========================================
+           Contact Action Bar (replaces emoji icons)
+           ======================================== */
+        .qb-contact-bar {
+            display: flex;
+            gap: 0;
+            margin: 10px 0 6px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .qb-contact-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 0;
+            background: var(--warm-lighter);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            border-right: 1px solid var(--border);
+            transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .qb-contact-btn:last-child { border-right: none; }
+        .qb-contact-btn:active { background: var(--warm-light); }
+        .qb-contact-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .qb-contact-btn.call-btn { color: #16a34a; }
+        .qb-contact-btn.text-btn { color: #2563eb; }
+        .qb-contact-btn.email-btn { color: #d97706; }
+        .qb-contact-btn.map-btn { color: #dc2626; }
+
+        /* ========================================
+           Communications Timeline
+           ======================================== */
+        .qb-comms-section h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .qb-comms-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .qb-comms-tab {
+            flex: 1;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--warm-lighter);
+            cursor: pointer;
+            border-right: 1px solid var(--border);
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .qb-comms-tab:last-child { border-right: none; }
+        .qb-comms-tab.active {
+            background: var(--primary);
+            color: #fff;
+        }
+        .qb-comms-tab .tab-count {
+            display: inline-block;
+            font-size: 10px;
+            background: rgba(0,0,0,0.15);
+            padding: 1px 5px;
+            border-radius: 8px;
+            margin-left: 4px;
+        }
+        .qb-comms-tab.active .tab-count {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .qb-comms-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--warm-lighter);
+            align-items: flex-start;
+        }
+        .qb-comms-item:last-child { border-bottom: none; }
+
+        .qb-comms-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        .qb-comms-icon.call-in { background: #dcfce7; color: #16a34a; }
+        .qb-comms-icon.call-out { background: #dbeafe; color: #2563eb; }
+        .qb-comms-icon.call-missed { background: #fef2f2; color: #dc2626; }
+        .qb-comms-icon.sms-in { background: #dcfce7; color: #16a34a; }
+        .qb-comms-icon.sms-out { background: #dbeafe; color: #2563eb; }
+
+        .qb-comms-body { flex: 1; min-width: 0; }
+        .qb-comms-row1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .qb-comms-who {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .qb-comms-when {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .qb-comms-detail {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+        .qb-comms-detail .msg-preview {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .qb-comms-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-left: 4px;
+        }
+        .qb-comms-badge.duration { background: #f3f4f6; color: #6b7280; }
+        .qb-comms-badge.voicemail { background: #fef3c7; color: #92400e; }
+        .qb-comms-badge.recording { background: #ede9fe; color: #7c3aed; }
+
+        /* ========================================
+           Tickets Section
+           ======================================== */
+        .qb-tickets-section h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .qb-ticket-item {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--warm-lighter);
+            align-items: flex-start;
+        }
+        .qb-ticket-item:last-child { border-bottom: none; }
+        .qb-ticket-priority {
+            width: 4px;
+            border-radius: 2px;
+            align-self: stretch;
+            flex-shrink: 0;
+        }
+        .qb-ticket-priority.high { background: #ef4444; }
+        .qb-ticket-priority.medium { background: #f59e0b; }
+        .qb-ticket-priority.low { background: #10b981; }
+        .qb-ticket-priority.none { background: #d1d5db; }
+        .qb-ticket-body { flex: 1; min-width: 0; }
+        .qb-ticket-row1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .qb-ticket-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .qb-ticket-status {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .qb-ticket-status.open { background: #dbeafe; color: #1e40af; }
+        .qb-ticket-status.in-progress { background: #fef3c7; color: #92400e; }
+        .qb-ticket-status.closed { background: #dcfce7; color: #166534; }
+        .qb-ticket-status.blocked { background: #fef2f2; color: #991b1b; }
+        .qb-ticket-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ========================================
+           Side Drawer Navigation
+           ======================================== */
+        .side-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 260px;
+            height: 100%;
+            background: #1e293b;
+            z-index: 9999;
+            transition: left 0.25s ease;
+            padding: max(20px, env(safe-area-inset-top)) 16px 20px;
+            overflow-y: auto;
+        }
+        .side-drawer.open { left: 0; }
+        .drawer-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 9998;
+        }
+        .drawer-overlay.open { display: block; }
+        .drawer-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+        .drawer-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 12px;
+            border-radius: 8px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background 0.15s;
+            margin-bottom: 4px;
+        }
+        .drawer-link:active, .drawer-link.active {
+            background: rgba(255,255,255,0.12);
+            color: #ffffff;
+        }
+        .drawer-link svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 1.5;
+            flex-shrink: 0;
+        }
+        .hamburger-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(255,255,255,0.12);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 20px;
+        }
+        .hamburger-btn:active {
+            background: rgba(255,255,255,0.25);
+        }
+
+
+        /* ========================================
+           Arrivy Task Timeline
+           ======================================== */
+        .qb-timeline-section h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .qb-timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--warm-lighter);
+            align-items: flex-start;
+        }
+        .qb-timeline-item:last-child { border-bottom: none; }
+        .qb-timeline-item.past { opacity: 0.5; }
+        .qb-timeline-item.today { background: #eff6ff; margin: 0 -16px; padding: 10px 16px; border-radius: 8px; opacity: 1; }
+        .qb-timeline-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 4px;
+            background: var(--status-grey);
+        }
+        .qb-timeline-dot.completed { background: var(--status-success); }
+        .qb-timeline-dot.active { background: var(--status-info); }
+        .qb-timeline-dot.service { background: var(--status-purple); }
+        .qb-timeline-info { flex: 1; }
+        .qb-timeline-name { font-size: 13px; font-weight: 600; color: var(--text); }
+        .qb-timeline-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .qb-timeline-status { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; }
+        .qb-timeline-status.submitted { background: #dcfce7; color: #166534; }
+        .qb-timeline-status.enroute { background: #fef3c7; color: #92400e; }
+        .qb-timeline-status.scheduled { background: #dbeafe; color: #1e40af; }
+        .qb-timeline-status.complete { background: #dcfce7; color: #166534; }
+        .qb-timeline-status.overdue { background: #fee2e2; color: #991b1b; }
+        .qb-timeline-dot.overdue { background: var(--status-danger); }
+
+        /* ========================================
+           Responsive
+           ======================================== */
+        .qb-milestone-row.pending {
+            opacity: 0.45;
+        }
+        .qb-milestone-row.pending .qb-milestone-date {
+            font-style: italic;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .qb-key-info-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        /* ========================================
+           Global Search Bar
+           ======================================== */
+        .qb-search-bar {
+            display: none;
+            padding: 8px 16px 10px;
+            background: #1e293b;
+            position: fixed;
+            top: calc(64px + env(safe-area-inset-top, 0px));
+            left: 0; right: 0;
+            z-index: 100;
+            transform: translateZ(0);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            align-items: center;
+            gap: 8px;
+        }
+        .qb-search-bar.open { display: flex; }
+        .qb-search-bar input {
+            flex: 1; min-width: 0;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255,255,255,0.12);
+            color: white;
+            font-size: 15px;
+            outline: none;
+            font-family: inherit;
+        }
+        .qb-search-bar input::placeholder { color: rgba(255,255,255,0.5); }
+        .qb-search-bar button {
+            background: none; border: none; color: rgba(255,255,255,0.7);
+            font-size: 14px; cursor: pointer; padding: 8px; font-family: inherit;
+        }
+        .qb-search-results {
+            display: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: #f8fafc;
+            z-index: 90;
+            overflow-y: auto;
+            padding: 16px;
+            padding-top: calc(132px + env(safe-area-inset-top, 0px));
+            padding-bottom: 100px;
+        }
+        .qb-search-results .sr-card {
+            background: #fff; border-radius: 10px; padding: 12px;
+            margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            cursor: pointer;
+        }
+        .qb-search-results .sr-card:active { background: #f1f5f9; }
+        .qb-search-results .sr-name { font-weight: 600; font-size: 14px; color: #1e293b; }
+        .qb-search-results .sr-status {
+            display: inline-block; font-size: 10px; padding: 2px 8px;
+            border-radius: 10px; background: #e2e8f0; color: #475569; margin-left: 6px;
+        }
+        .qb-search-results .sr-sub { font-size: 12px; color: #64748b; margin-top: 2px; }
+        .qb-search-results .sr-msg { text-align: center; color: #94a3b8; padding: 40px 0; font-size: 14px; }
+        .qb-search-btn {
+            width: 36px; height: 36px; border: none;
+            background: rgba(255,255,255,0.12); border-radius: 8px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: #ffffff; font-size: 16px; transition: background 0.2s;
+        }
+        .qb-search-btn:active { background: rgba(255,255,255,0.25); }
+    </style>
+</head>
+<body>
+    <!-- QBSkin: Header -->
+    <div class="qb-header">
+        <div class="qb-header-left">
+            <button class="qb-back-button" id="backBtn" title="Back">←</button>
+            <div class="qb-header-title">Project Detail</div>
+        </div>
+        <div class="qb-header-right">
+            <button class="qb-search-btn" id="projectSearchBtn" onclick="toggleProjectSearch()" title="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+            <button class="hamburger-btn" onclick="toggleDrawer()" title="Menu">&#9776;</button>
+        </div>
+    </div>
+
+    <!-- Global Search Bar (hidden tray, slides down on toggle) -->
+    <div class="qb-search-bar" id="projectSearchBar">
+        <input type="text" id="projectSearchInput" placeholder="Search all projects..." oninput="handleProjectSearch(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button onclick="toggleProjectSearch()">Cancel</button>
+    </div>
+    <div class="qb-search-results" id="projectSearchResults"></div>
+
+    <div class="qb-header-spacer"></div>
+
+    <!-- QBSkin: Main Content -->
+    <main id="mainContent">
+        <!-- Loading State (shown initially) -->
+        <div class="qb-loading" id="loadingState">
+            <div class="qb-spinner"></div>
+            Loading project details...
+        </div>
+    </main>
+
+    <!-- Side Drawer Nav -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+    <div class="side-drawer" id="sideDrawer">
+        <div class="drawer-title">Core Ops</div>
+        <a class="drawer-link" href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=cc-quick-glance.html">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-3m0 0l7-4 7 4M5 10v10a1 1 0 001 1h12a1 1 0 001-1V10M9 21h6"/></svg>
+            Dashboard
+        </a>
+        <a class="drawer-link active" href="#">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Project
+        </a>
+        <a class="drawer-link" href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-tasks.html">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Tasks
+        </a>
+        <a class="drawer-link" href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-labor.html">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Labor
+        </a>
+        <a class="drawer-link" href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-trends.html">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            Trends
+        </a>
+    </div>
+
+    <script>
+        // ========================================
+        // QBSkin Project Detail — JavaScript
+        // ========================================
+
+        // Side Drawer
+        function toggleDrawer() {
+            const drawer = document.getElementById('sideDrawer');
+            const overlay = document.getElementById('drawerOverlay');
+            const isOpen = drawer.classList.contains('open');
+            if (isOpen) { drawer.classList.remove('open'); overlay.classList.remove('open'); }
+            else { drawer.classList.add('open'); overlay.classList.add('open'); }
+        }
+
+        // Configuration
+        const QB_CONFIG = {
+            realm: 'kin.quickbase.com',
+            appId: 'br9kwm8bk',
+            tables: {
+                projects: 'br9kwm8na',
+                arrivyTasks: 'bvbqgs5yc',
+                events: 'bsbguxz4i',
+                intakeEvents: 'bt4a8ypkq',
+                notes: 'bsb6bqt3b',
+                smsLog: 'bvjf44d7d',       // Dialpad SMS/Text messages
+                callLog: 'bvjf2i36u',       // Dialpad Call Log
+                tickets: 'bstdqwrkg'        // Tickets table
+            },
+            token: 'b6teb3_p3bs_0_bzh28isbyba5yh9ujb73hqthh5'
+        };
+
+        // State
+        let projectData = null;
+        let fieldMap = {}; // label -> field ID mapping
+        let recordId = null;
+
+        // ========================================
+        // Utility: API Headers
+        // ========================================
+        function getApiHeaders() {
+            return {
+                'QB-Realm-Hostname': QB_CONFIG.realm,
+                'Authorization': 'QB-USER-TOKEN ' + QB_CONFIG.token,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // ========================================
+        // Utility: Format Date
+        // ========================================
+        function formatDate(dateString) {
+            if (!dateString) return null;
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            } catch {
+                return dateString;
+            }
+        }
+
+        // ========================================
+        // Utility: Calculate Days Since
+        // ========================================
+        function daysSince(dateString) {
+            if (!dateString) return null;
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now.getTime() - date.getTime();
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            return days === 1 ? '1 day' : days + ' days';
+        }
+
+        // ========================================
+        // API: Get Field Metadata
+        // ========================================
+        async function apiGetFields(tableId) {
+            try {
+                const res = await fetch(`https://api.quickbase.com/v1/fields?tableId=${tableId}`, {
+                    method: 'GET',
+                    headers: getApiHeaders()
+                });
+                if (!res.ok) throw new Error(`API error: ${res.status}`);
+                const data = await res.json();
+
+                // Build label -> ID map
+                const map = {};
+                data.forEach(f => {
+                    map[f.label] = f.id;
+                    // Also store common alternative names
+                    if (f.label.toLowerCase().includes('record')) map['Record ID'] = f.id;
+                });
+                return map;
+            } catch (e) {
+                console.error('Error fetching fields:', e);
+                return {};
+            }
+        }
+
+        // ========================================
+        // API: Query Records
+        // ========================================
+        async function apiQuery(tableId, selectFields, whereClause, limit = 100) {
+            try {
+                const body = {
+                    from: tableId,
+                    select: selectFields,
+                    where: whereClause,
+                    options: { top: limit }
+                };
+                console.log('[QBSkin] API query:', tableId, 'where:', whereClause, 'fields:', selectFields);
+                const res = await fetch('https://api.quickbase.com/v1/records/query', {
+                    method: 'POST',
+                    headers: getApiHeaders(),
+                    body: JSON.stringify(body)
+                });
+                if (!res.ok) {
+                    const errText = await res.text();
+                    console.error('[QBSkin] API error', res.status, 'for table', tableId, ':', errText);
+                    throw new Error(`API error: ${res.status} - ${errText}`);
+                }
+                const result = await res.json();
+                console.log('[QBSkin] API result for', tableId, ':', result.data ? result.data.length : 0, 'records');
+                return result;
+            } catch (e) {
+                console.error('[QBSkin] Error querying table', tableId, ':', e);
+                return { data: [] };
+            }
+        }
+
+        // ========================================
+        // API: Upsert Record
+        // ========================================
+        async function apiUpsert(tableId, data) {
+            try {
+                const res = await fetch('https://api.quickbase.com/v1/records', {
+                    method: 'POST',
+                    headers: getApiHeaders(),
+                    body: JSON.stringify({
+                        to: tableId,
+                        data: [data]
+                    })
+                });
+                if (!res.ok) throw new Error(`API error: ${res.status}`);
+                return await res.json();
+            } catch (e) {
+                console.error('Error upserting record:', e);
+                return null;
+            }
+        }
+
+        // ========================================
+        // Load Project Data
+        // ========================================
+        // Dynamic Field IDs (discovered at runtime)
+        let dynFids = {};
+
+        async function loadProjectDetail() {
+            // Get record ID from URL hash
+            const hash = window.location.hash;
+            const match = hash.match(/#rid=(\d+)/);
+            if (!match) {
+                showNoProject();
+                return;
+            }
+            recordId = match[1];
+
+            try {
+                // Step 1: Discover field IDs for fields we don't have hardcoded FIDs for
+                const allFields = await apiGetFields(QB_CONFIG.tables.projects);
+                console.log('[QBSkin] Discovered', Object.keys(allFields).length, 'fields');
+
+                // Only discover fields we don't have hardcoded FIDs for
+                const wantedLabels = {
+                    'Enerflo_Project_LInk': 'enerflo',
+                    'Enerflo_Project_Link': 'enerflo',
+                    'Funding Dashboard: M1 Status': 'm1Status',
+                    'Funding Dashboard: M2 Status': 'm2Status',
+                    'Funding Dashboard: M3 Status': 'm3Status',
+                    'Lender Loan ID': 'lenderLoanId',
+                    'Google Drive Link': 'gdrive',
+                    'Finance Term - Lookup': 'financeTerm',
+                    'Finance Rate - Lookup': 'financeRate',
+                    'Receivables Table: Net M2 Received': 'netM2',
+                };
+                dynFids = {};
+                for (const [label, fid] of Object.entries(allFields)) {
+                    for (const [wanted, key] of Object.entries(wantedLabels)) {
+                        if (label === wanted) {
+                            dynFids[key] = fid;
+                        }
+                    }
+                }
+                console.log('[QBSkin] Dynamic FIDs:', JSON.stringify(dynFids));
+
+                // Step 2: Build field list — hardcoded (verified) + discovered
+                const projectFields = [
+                    3,    // Record ID#
+                    6,    // Project Name (fallback)
+                    13,   // System Size(kW)
+                    146,  // Customer Address
+                    148,  // Residential Client - Mobile Phone
+                    149,  // Residential Client - Email
+                    162,  // Survey Status
+                    164,  // Survey Submitted Date
+                    165,  // Survey Approved Date
+                    166,  // Survey Scheduled Date (fallback — prefer Arrivy)
+                    178,  // Install Scheduled Start Date
+                    207,  // Permit Submitted
+                    208,  // Permit Approved
+                    226,  // Inspection Scheduled Date (fallback — prefer Arrivy)
+                    255,  // Status
+                    312,  // NTP - Approval Date
+                    318,  // AHJ Name
+                    326,  // NEM Submitted Date
+                    327,  // NEM Approved Date
+                    330,  // Setter
+                    339,  // Sales Office
+                    344,  // Lender
+                    347,  // Intake Status
+                    355,  // Closer
+                    367,  // Residential Client - Full Name
+                    371,  // Utility Name
+                    461,  // Intake Completed Date
+                    479,  // NTP - Submitted Date
+                    491,  // Passing Inspection Completed Date
+                    522,  // Sales Date
+                    534,  // Install Completed Date
+                    537,  // PTO Submitted Date
+                    538,  // PTO Approved Date
+                    571,  // Inspection Pass/Fail
+                    699,  // Min Initial Design CAD Submitted
+                    701,  // Min Initial CAD Design Approved
+                    705,  // Min Initial Engineering Submitted
+                    820,  // Project Coordinator
+                    1774, // Min Initial Design Completed
+                    70,   // Lender - Lookup (for link logic)
+                    144,  // Residential Client Main Contact Record ID# (link to comms tables)
+                    ...Object.values(dynFids)
+                ];
+                const uniqueFields = [...new Set(projectFields.filter(f => f && typeof f === 'number'))];
+
+                // Step 3: Query the specific project record
+                const whereClause = `{'3'.EX.'${recordId}'}`;
+                const result = await apiQuery(QB_CONFIG.tables.projects, uniqueFields, whereClause, 1);
+
+                if (!result.data || result.data.length === 0) {
+                    showError(`Project ${recordId} not found.`);
+                    return;
+                }
+
+                projectData = result.data[0];
+
+                // Step 4: Render the page
+                renderProjectDetail();
+
+            } catch (e) {
+                console.error('Error loading project:', e);
+                showError('Failed to load project details.');
+            }
+        }
+
+        // ========================================
+        // Show Error
+        // ========================================
+        function showError(message) {
+            const main = document.getElementById('mainContent');
+            main.innerHTML = `<div class="qb-error">${message}</div>`;
+        }
+
+        function showNoProject() {
+            const main = document.getElementById('mainContent');
+            main.innerHTML = `
+                <div style="text-align:center; padding:60px 16px 0;">
+                    <div style="font-size:48px; margin-bottom:16px;">📋</div>
+                    <div style="font-size:20px; font-weight:700; color:var(--text); margin-bottom:8px;">No Project Selected</div>
+                    <div style="font-size:14px; color:var(--text-muted); margin-bottom:24px;">
+                        Open a project from the Dashboard to see its details here.
+                    </div>
+                    <a href="https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=cc-quick-glance.html"
+                       style="display:inline-block; padding:12px 24px; background:var(--primary); color:#fff; border-radius:8px; text-decoration:none; font-weight:600; font-size:16px;">
+                        Go to Dashboard
+                    </a>
+                </div>`;
+        }
+
+        // ========================================
+        // Helper: Get QB Record Field Value
+        // ========================================
+        function qbv(record, fieldId) {
+            if (!record || !record[fieldId]) return null;
+            const v = record[fieldId].value;
+            if (v === null || v === undefined) return null;
+            // Multi-select fields return arrays — join them
+            if (Array.isArray(v)) return v.join(', ');
+            // QB user fields return {email, name, id} — extract email
+            if (typeof v === 'object' && v.email) return v.email;
+            if (typeof v === 'object' && v.name) return v.name;
+            return v;
+        }
+
+        // ========================================
+        // Render Project Detail
+        // ========================================
+        function renderProjectDetail() {
+            const main = document.getElementById('mainContent');
+            const data = projectData;
+
+            // ── Extract data using VERIFIED field IDs ──
+            // FID 367: Residential Client Main Contact - Full Name (primary)
+            // FID 6: Project Name (fallback only)
+            const projectName = String(qbv(data, 367) || qbv(data, 6) || 'Unknown Project');
+            const status = qbv(data, 255) || 'Unknown';               // FID 255: Status
+            const saleDate = qbv(data, 522) ? formatDate(qbv(data, 522)) : null; // FID 522: Sales Date
+            const systemSize = qbv(data, 13) || 'N/A';                // FID 13: System Size(kW)
+            const lender = String(qbv(data, 344) || 'N/A');           // FID 344: Lender
+            const lenderLookup = String(qbv(data, 70) || qbv(data, 344) || ''); // FID 70: Lender - Lookup
+            const loanId = dynFids.lenderLoanId ? (qbv(data, dynFids.lenderLoanId) ? String(qbv(data, dynFids.lenderLoanId)) : null) : null; // discovered
+            const salesOffice = qbv(data, 339) || 'N/A';              // FID 339: Sales Office
+            const closer = qbv(data, 355) || 'N/A';                   // FID 355: Closer
+            const setter = qbv(data, 330) || 'N/A';                   // FID 330: Setter
+            const ahj = qbv(data, 318) || '';                          // FID 318: AHJ Name
+            const utility = qbv(data, 371) || '';                      // FID 371: Utility Name
+            const coordinator = qbv(data, 820) || '';                  // FID 820: Project Coordinator
+
+            // Hardcoded FIDs for contact / location / funding
+            const address = String(qbv(data, 146) || '');              // FID 146: Customer Address
+            const phone = String(qbv(data, 148) || '');                // FID 148: Mobile Phone
+            const email = String(qbv(data, 149) || '');                // FID 149: Email
+            const enerfloUrl = dynFids.enerflo ? String(qbv(data, dynFids.enerflo) || '') : ''; // discovered
+            const ntpSubmitted = qbv(data, 479);                       // FID 479: NTP - Submitted Date
+            const ntpApproved = qbv(data, 312);                        // FID 312: NTP - Approval Date
+            const m1Status = dynFids.m1Status ? String(qbv(data, dynFids.m1Status) || '') : ''; // discovered
+            const m2Status = dynFids.m2Status ? String(qbv(data, dynFids.m2Status) || '') : ''; // discovered
+            const m3Status = dynFids.m3Status ? String(qbv(data, dynFids.m3Status) || '') : ''; // discovered
+
+            // Build lender link based on lender type and loan ID
+            const ll = lenderLookup.toLowerCase();
+            let lenderUrl = null;
+            let portalName = '';
+            let lenderIconUrl = '';
+            if (loanId) {
+                if (ll.includes('lightreach')) {
+                    lenderUrl = `https://palmetto.finance/accounts/${loanId}`;
+                    portalName = 'Palmetto Finance';
+                    lenderIconUrl = 'https://media.licdn.com/dms/image/v2/D560BAQHji0oqjsy2hQ/company-logo_200_200/B56Zdkp5NKGsAM-/0/1749740394008/palmetto_logo?e=2147483647&v=beta&t=VTrI8YiJVCjSxhLwJx1FmKEgmLJCdZXhfTDmuZhV3E4';
+                } else if (ll.includes('goodleap') && ll.includes('tpo')) {
+                    lenderUrl = `https://origin.goodleap.com/tpo/${loanId}`;
+                    portalName = 'GoodLeap TPO';
+                    lenderIconUrl = 'https://media.licdn.com/dms/image/v2/D560BAQFqat6A_xZxFg/company-logo_200_200/B56ZTSjOPbHEAQ-/0/1738699236636/goodleap_logo?e=2147483647&v=beta&t=PoKuKN1n3FjUXpXkfqdA6R5lySFoNoNQ8cruapDDuSQ';
+                } else if (ll.includes('goodleap')) {
+                    lenderUrl = `https://origin.goodleap.com/loans/${loanId}`;
+                    portalName = 'GoodLeap';
+                    lenderIconUrl = 'https://media.licdn.com/dms/image/v2/D560BAQFqat6A_xZxFg/company-logo_200_200/B56ZTSjOPbHEAQ-/0/1738699236636/goodleap_logo?e=2147483647&v=beta&t=PoKuKN1n3FjUXpXkfqdA6R5lySFoNoNQ8cruapDDuSQ';
+                } else if (ll.includes('skylight')) {
+                    lenderUrl = `https://installer.skylightlending.com/leases/all-leases/${loanId}`;
+                    portalName = 'Skylight Lending';
+                    lenderIconUrl = 'https://media.licdn.com/dms/image/v2/D4E0BAQGHt20YiPsQ0Q/company-logo_200_200/B4EZnUqpSRKwAM-/0/1760209573502/skylight2_logo?e=2147483647&v=beta&t=GSKi9O9uQXxxeAmeWv_rmul6PCkRooTcbhYjWSXBwgo';
+                }
+            }
+            const lenderLabelIcon = lenderIconUrl ? `<img src="${lenderIconUrl}" style="width:14px;height:14px;vertical-align:middle;border-radius:3px;margin-left:4px;" />` : '';
+            const lenderValueHtml = lenderUrl
+                ? `<a href="${lenderUrl}" target="_blank" style="color:var(--primary);text-decoration:underline;" title="Open in ${portalName}">${escapeHtml(lender)}</a>`
+                : escapeHtml(lender);
+
+            // Funding bubbles — NTP, M1, M2, M3
+            // Color logic matches QB formula: gray=not started, blue=pending/submitted, orange=approved, green=received, red=rejected, purple=clawback
+            function fundingColor(statusText, isNtp) {
+                if (isNtp) {
+                    if (statusText === 'approved') return { bg: '#28a745', fg: 'white' };
+                    if (statusText === 'submitted') return { bg: '#17a2b8', fg: 'white' };
+                    return { bg: '#ccc', fg: '#666' }; // not started
+                }
+                const s = (statusText || '').toUpperCase();
+                if (!s) return { bg: '#ccc', fg: '#666' }; // gray — not started / empty
+                if (s.includes('RECEIVED') || s.includes('FULLY FUNDED')) return { bg: '#28a745', fg: 'white' };
+                if (s.includes('REJECTED')) return { bg: '#DC3545', fg: 'white' };
+                if (s.includes('APPROVED')) return { bg: '#FFA500', fg: 'white' };
+                if (s.includes('PENDING') || s.includes('REQUESTED')) return { bg: '#17a2b8', fg: 'white' };
+                return { bg: '#ccc', fg: '#666' }; // unknown → gray
+            }
+            function fundingBubble(label, statusText, isNtp) {
+                const c = fundingColor(statusText, isNtp);
+                return `<span style="display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:700;background:${c.bg};color:${c.fg};margin-right:2px;" title="${escapeHtml(statusText || 'Not started')}">${label}</span>`;
+            }
+            const ntpStatusText = ntpApproved ? 'approved' : (ntpSubmitted ? 'submitted' : '');
+            // Always show funding row in the lender section (all gray if nothing populated yet)
+            const fundingHtml = `<div style="margin-top:4px;">${fundingBubble('NTP', ntpStatusText, true)}${fundingBubble('M1', m1Status, false)}${fundingBubble('M2', m2Status, false)}${fundingBubble('M3', m3Status, false)}</div>`;
+
+            // Contact action bar — SVG icons for call, text, email, map
+            // Enerflo link now lives in the key info grid, not next to the name
+            const addressHtml = address ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" style="color:var(--text-muted);font-size:13px;text-decoration:none;" title="Open in Google Maps">${escapeHtml(address)}</a>` : '';
+
+            // Build the contact action bar with proper SVG icons
+            let contactBarHtml = '';
+            const hasAnyContact = phone || email || address;
+            if (hasAnyContact) {
+                contactBarHtml = `<div class="qb-contact-bar">`;
+                if (phone) {
+                    contactBarHtml += `<a href="tel:${phone}" class="qb-contact-btn call-btn"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call</a>`;
+                    contactBarHtml += `<a href="sms:${phone}" class="qb-contact-btn text-btn"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Text</a>`;
+                }
+                if (email) {
+                    contactBarHtml += `<a href="mailto:${email}" class="qb-contact-btn email-btn"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email</a>`;
+                }
+                if (address) {
+                    contactBarHtml += `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" class="qb-contact-btn map-btn"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Map</a>`;
+                }
+                contactBarHtml += `</div>`;
+            }
+
+            // KCA / Intake status
+            const intakeStatus = (qbv(data, 347) || '').toLowerCase();
+            const intakeCompleted = qbv(data, 461);
+            let kcaDotClass = 'not-started';
+            let kcaLabel = 'Pending';
+            if (intakeCompleted || intakeStatus === 'complete' || intakeStatus === 'approved') { kcaDotClass = 'completed'; kcaLabel = 'Approved'; }
+            else if (intakeStatus.includes('reject')) { kcaDotClass = 'rejected'; kcaLabel = 'Rejected'; }
+            else if (intakeStatus !== '') { kcaDotClass = 'in-progress'; kcaLabel = 'In Progress'; }
+
+            // Milestone data — VERIFIED field IDs, ordered by lifecycle
+            // scheduledFid: if pending, check for a scheduled date to show in Next Up
+            const milestones = [
+                { name: 'Survey Scheduled', fid: 166, scheduledFid: 166 },  // FID 166 (fallback — prefer Arrivy)
+                { name: 'Survey Submitted', fid: 164 },                     // FID 164
+                { name: 'Survey Approved', fid: 165 },                      // FID 165
+                { name: 'CAD Submitted', fid: 699 },                        // FID 699
+                { name: 'CAD Approved', fid: 701 },                         // FID 701
+                { name: 'Engineering Submitted', fid: 705 },                // FID 705
+                { name: 'Design Completed', fid: 1774 },                    // FID 1774 (Min Initial Design Completed)
+                { name: 'Permit Submitted', fid: 207 },                     // FID 207
+                { name: 'Permit Approved', fid: 208 },                      // FID 208
+                { name: 'NEM Submitted', fid: 326 },                        // FID 326
+                { name: 'NEM Approved', fid: 327 },                         // FID 327
+                { name: 'Install Scheduled', fid: 178, scheduledFid: 178 }, // FID 178
+                { name: 'Install Completed', fid: 534 },                    // FID 534
+                { name: 'Inspection Passed', fid: 491, scheduledFid: 226 }, // FID 491 (sched fallback: FID 226)
+                { name: 'PTO Submitted', fid: 537 },                        // FID 537
+                { name: 'PTO Approved', fid: 538 },                         // FID 538
+            ];
+
+            // Build HTML
+            let html = `
+                <!-- Project Summary Card -->
+                <div class="qb-card qb-project-summary">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+                        <div style="flex:1;min-width:0;">
+                            <div class="qb-customer-name" style="margin-bottom:4px;">${escapeHtml(projectName)}</div>
+                        </div>
+                        <span class="qb-pill qb-pill-status" style="flex-shrink:0;">${escapeHtml(status)}</span>
+                    </div>
+                    ${addressHtml ? `<div style="margin:4px 0 0;">${addressHtml}</div>` : ''}
+                    <div class="qb-summary-row" style="margin-bottom:0;margin-top:4px;">
+                        <span class="qb-age-indicator">${saleDate || 'No date'} ${saleDate ? '• ' + daysSince(qbv(data, 522)) : ''}</span>
+                    </div>
+                    ${contactBarHtml}
+                </div>
+
+                <!-- Key Info Card -->
+                <div class="qb-card">
+                    <div class="qb-key-info-grid">
+                        <div class="qb-key-info-item">
+                            <div class="qb-key-info-label">System Size</div>
+                            <div class="qb-key-info-value">${escapeHtml(systemSize)}${systemSize !== 'N/A' ? ' kW' : ''}</div>
+                        </div>
+                        <div class="qb-key-info-item">
+                            <div class="qb-key-info-label">Lender ${lenderLabelIcon}</div>
+                            <div class="qb-key-info-value">${lenderValueHtml}</div>
+                            ${fundingHtml}
+                        </div>
+                        <div class="qb-key-info-item">
+                            <div class="qb-key-info-label">Sales Office</div>
+                            <div class="qb-key-info-value">${escapeHtml(salesOffice)}</div>
+                        </div>
+                        <div class="qb-key-info-item">
+                            <div class="qb-key-info-label">Closer</div>
+                            <div class="qb-key-info-value">${escapeHtml(closer)}</div>
+                        </div>
+                        <div class="qb-key-info-item">
+                            <div class="qb-key-info-label">Setter</div>
+                            <div class="qb-key-info-value">${escapeHtml(setter)}</div>
+                        </div>
+                        ${coordinator ? `<div class="qb-key-info-item">
+                            <div class="qb-key-info-label">Coordinator</div>
+                            <div class="qb-key-info-value">${escapeHtml(coordinator)}</div>
+                        </div>` : ''}
+                        ${utility ? `<div class="qb-key-info-item">
+                            <div class="qb-key-info-label">Utility</div>
+                            <div class="qb-key-info-value">${escapeHtml(utility)}</div>
+                        </div>` : ''}
+                        ${ahj ? `<div class="qb-key-info-item">
+                            <div class="qb-key-info-label">AHJ</div>
+                            <div class="qb-key-info-value">${escapeHtml(ahj)}</div>
+                        </div>` : ''}
+                        ${enerfloUrl ? `<div class="qb-key-info-item">
+                            <div class="qb-key-info-label">Enerflo</div>
+                            <div class="qb-key-info-value"><a href="${enerfloUrl}" target="_blank" style="color:var(--primary);text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Open Project</a></div>
+                        </div>` : ''}
+                    </div>
+                </div>
+
+            `;
+
+            // Build milestones — show all, completed ones green, pending grey
+            let nextUp = null;
+            const today = new Date().toISOString().split('T')[0];
+            let milestonesHtml = '';
+
+            // KCA first
+            milestonesHtml += `
+                <div class="qb-milestone-row">
+                    <div class="qb-milestone-dot ${kcaDotClass}"></div>
+                    <div class="qb-milestone-content">
+                        <div class="qb-milestone-name">KCA / Intake</div>
+                        <div class="qb-milestone-date">${intakeCompleted ? escapeHtml(formatDate(intakeCompleted)) : kcaLabel}</div>
+                    </div>
+                </div>
+            `;
+
+            milestones.forEach((m) => {
+                const dateValue = qbv(data, m.fid);
+                const hasDate = dateValue && dateValue !== '' && dateValue !== '-';
+                const displayDate = hasDate ? formatDate(dateValue) : 'Pending';
+                const dotClass = hasDate ? 'completed' : 'not-started';
+
+                milestonesHtml += `
+                    <div class="qb-milestone-row${hasDate ? '' : ' pending'}">
+                        <div class="qb-milestone-dot ${dotClass}"></div>
+                        <div class="qb-milestone-content">
+                            <div class="qb-milestone-name">${escapeHtml(m.name)}</div>
+                            <div class="qb-milestone-date">${escapeHtml(displayDate)}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Track next up (first milestone without a date)
+                // Check if there's a scheduled date for this upcoming milestone
+                if (!nextUp && !hasDate) {
+                    let scheduledDate = null;
+                    if (m.scheduledFid) {
+                        const schedVal = qbv(data, m.scheduledFid);
+                        if (schedVal) scheduledDate = formatDate(schedVal);
+                    }
+                    nextUp = { name: m.name, date: scheduledDate || 'Pending' };
+                }
+            });
+
+            // Add Next Up banner at the top if found
+            let nextUpHtml = '';
+            if (nextUp) {
+                nextUpHtml = `
+                    <div class="qb-next-up">
+                        <div class="qb-next-up-icon">📅</div>
+                        <div>
+                            <div class="qb-next-up-label">Next Up</div>
+                            <div class="qb-next-up-value">${escapeHtml(nextUp.name)} • ${escapeHtml(nextUp.date)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `
+                ${nextUpHtml}
+
+                <!-- Milestone Timeline -->
+                <div class="qb-card qb-milestone-section">
+                    <h3>Progress Timeline</h3>
+                    ${milestonesHtml}
+                </div>
+
+                <!-- Field Activity (Arrivy Tasks) -->
+                <div class="qb-card qb-timeline-section">
+                    <h3>Field Activity</h3>
+                    <div id="arrivyTimeline">
+                        <div class="qb-notes-placeholder">Loading field activity...</div>
+                    </div>
+                </div>
+
+                <!-- Communications Section (Calls + Texts) -->
+                <div class="qb-card qb-comms-section">
+                    <h3>Communications</h3>
+                    <div class="qb-comms-tabs" id="commsTabs">
+                        <div class="qb-comms-tab active" data-tab="all">All</div>
+                        <div class="qb-comms-tab" data-tab="calls">Calls</div>
+                        <div class="qb-comms-tab" data-tab="texts">Texts</div>
+                    </div>
+                    <div id="commsContainer">
+                        <div class="qb-notes-placeholder">Loading communications...</div>
+                    </div>
+                </div>
+
+                <!-- Tickets Section -->
+                <div class="qb-card qb-tickets-section">
+                    <h3>Tickets <span class="qb-notes-count" id="ticketsCount">...</span></h3>
+                    <div id="ticketsContainer">
+                        <div class="qb-notes-placeholder">Loading tickets...</div>
+                    </div>
+                </div>
+
+                <!-- Notes Section (collapsible) -->
+                <div class="qb-card">
+                    <div class="qb-notes-header" id="notesToggle">
+                        <div class="qb-notes-title">
+                            Notes <span class="qb-notes-count" id="notesCount">...</span>
+                            <span class="qb-notes-toggle collapsed" id="notesArrow">&#9660;</span>
+                        </div>
+                    </div>
+                    <div class="qb-notes-body collapsed" id="notesBody">
+                        <button class="qb-add-note-button" id="addNoteBtn">+ Add Note</button>
+                        <div class="qb-note-form" id="noteForm">
+                            <div class="qb-note-form-inner">
+                                <textarea id="noteText" placeholder="Write your note here..."></textarea>
+                                <div class="qb-note-form-row">
+                                    <select id="noteCategory">
+                                        <option value="">Category...</option>
+                                        <option value="General">General</option>
+                                        <option value="Site Survey">Site Survey</option>
+                                        <option value="Install">Install</option>
+                                        <option value="Inspection">Inspection</option>
+                                        <option value="Permitting">Permitting</option>
+                                        <option value="Design">Design</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Customer Service">Customer Service</option>
+                                    </select>
+                                    <select id="noteType">
+                                        <option value="">Type...</option>
+                                        <option value="Internal">Internal</option>
+                                        <option value="Customer Call">Customer Call</option>
+                                        <option value="Customer Text">Customer Text</option>
+                                        <option value="Email">Email</option>
+                                        <option value="Follow-Up">Follow-Up</option>
+                                    </select>
+                                </div>
+                                <div class="qb-note-form-actions">
+                                    <button class="qb-note-cancel-btn" id="noteCancelBtn">Cancel</button>
+                                    <button class="qb-note-save-btn" id="noteSaveBtn">Save Note</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="notesContainer">
+                            <div class="qb-notes-placeholder">Loading notes...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="qb-card">
+                    <div class="qb-actions-row">
+                        <button class="qb-action-button" id="createTicketBtn">Create Ticket</button>
+                        <button class="qb-action-button secondary" id="updateStatusBtn">Update Status</button>
+                    </div>
+                </div>
+
+                <div style="height: 20px;"></div>
+            `;
+
+            main.innerHTML = html;
+
+            // Attach event listeners
+            attachEventListeners(projectName, status);
+            loadExistingNotes();
+            loadArrivyTimeline();
+            loadCommunications();
+            loadTickets();
+        }
+
+        // ========================================
+        // Attach Event Listeners
+        // ========================================
+        function attachEventListeners(customerName, currentStatus) {
+            // Notes section toggle (collapse/expand)
+            document.getElementById('notesToggle').addEventListener('click', () => {
+                const body = document.getElementById('notesBody');
+                const arrow = document.getElementById('notesArrow');
+                body.classList.toggle('collapsed');
+                arrow.classList.toggle('collapsed');
+            });
+
+            // Add Note — toggle inline form
+            document.getElementById('addNoteBtn').addEventListener('click', toggleNoteForm);
+            document.getElementById('noteCancelBtn').addEventListener('click', closeNoteForm);
+            document.getElementById('noteSaveBtn').addEventListener('click', submitNote);
+
+            // Create Ticket
+            document.getElementById('createTicketBtn').addEventListener('click', () => {
+                window.location.href = `https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=qb-skin-tasks.html#project=${recordId}`;
+            });
+
+            // Update Status
+            document.getElementById('updateStatusBtn').addEventListener('click', openStatusDropdown);
+
+            // Back, Refresh, Snapshot listeners are attached in DOMContentLoaded (always-active)
+        }
+
+        // ========================================
+        // Load Existing Notes
+        // ========================================
+        async function loadExistingNotes() {
+            try {
+                // Notes table (bsb6bqt3b) field IDs:
+                // 3 = Record ID#, 6 = Note, 7 = Category, 8 = Date, 9 = Note by
+                // 13 = Related Project, 14 = Project - Full Name, 38 = Type, 39 = Disposition
+                const noteFields = [3, 6, 7, 8, 9, 13, 38, 39];
+                const whereClause = `{'13'.EX.'${recordId}'}`;
+                const result = await apiQuery(QB_CONFIG.tables.notes, noteFields, whereClause, 50);
+
+                const container = document.getElementById('notesContainer');
+                const countEl = document.getElementById('notesCount');
+
+                if (!result.data || result.data.length === 0) {
+                    container.innerHTML = '<div class="qb-notes-placeholder">No notes yet</div>';
+                    countEl.textContent = '0';
+                    return;
+                }
+
+                countEl.textContent = result.data.length;
+
+                // Sort by date descending (newest first)
+                const sorted = result.data.sort((a, b) => {
+                    const da = qbv(a, 8) || '';
+                    const db = qbv(b, 8) || '';
+                    return db.localeCompare(da);
+                });
+
+                let html = '';
+                sorted.forEach(note => {
+                    const noteText = qbv(note, 6) || '';
+                    const noteDate = qbv(note, 8) ? formatDate(qbv(note, 8)) : 'No date';
+                    // Field 9 is a user field — qbv now extracts email from object
+                    const noteByRaw = note[9] && note[9].value ? note[9].value : null;
+                    let authorDisplay = 'Unknown';
+                    if (noteByRaw && typeof noteByRaw === 'object') {
+                        authorDisplay = noteByRaw.name || (noteByRaw.email ? noteByRaw.email.split('@')[0] : 'Unknown');
+                    } else if (noteByRaw) {
+                        authorDisplay = String(noteByRaw).split('@')[0];
+                    }
+                    const category = qbv(note, 7) || '';
+
+                    html += `
+                        <div class="qb-note-entry">
+                            <div class="qb-note-entry-meta">
+                                <span class="qb-note-entry-author">${escapeHtml(authorDisplay)}</span>
+                                <span class="qb-note-entry-time">${escapeHtml(noteDate)}</span>
+                            </div>
+                            <div>${escapeHtml(noteText)}</div>
+                            ${category ? `<span class="qb-note-entry-category">${escapeHtml(category)}</span>` : ''}
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('[QBSkin] Error loading notes:', e, e.stack);
+                const nc = document.getElementById('notesContainer');
+                if (nc) nc.innerHTML = `<div class="qb-notes-placeholder">Could not load notes<br><small style="color:#999;">${escapeHtml(e.message)}</small></div>`;
+                const nct = document.getElementById('notesCount');
+                if (nct) nct.textContent = '?';
+            }
+        }
+
+        async function loadArrivyTimeline() {
+            try {
+                // 3=RID, 6=RelProject, 56=Template, 85=Status, 115=Scheduled, 97=Submitted, 146=EnRoute, 117=Arrived, 268=CrewName, 197=AssignedCrew, 145=EnRouteName, 107=TaskURL, 270=InstallComplete, 198=kW
+                // RTR fields: 242=Official:RTR Status, 243=Official:RTR Install Status, 248=Official:RTR Status Updated At, 258=Official:RTR Crew On Site, 217=# of Ready for RTR Task Logs
+                const arrivyFields = [3, 6, 56, 85, 115, 97, 146, 117, 268, 197, 145, 107, 270, 198, 242, 243, 248, 258, 217];
+                const whereClause = `{'6'.EX.'${recordId}'}`;
+                const result = await apiQuery(QB_CONFIG.tables.arrivyTasks, arrivyFields, whereClause, 100);
+                const container = document.getElementById('arrivyTimeline');
+                if (!container) return;
+                if (!result.data || result.data.length === 0) {
+                    container.innerHTML = '<div class="qb-notes-placeholder">No field activity found</div>';
+                    return;
+                }
+                console.log('[QBSkin] Arrivy tasks loaded:', result.data.length, 'First record sample:', JSON.stringify(result.data[0]).substring(0, 300));
+                // Sort chronologically descending (newest first)
+                const sorted = result.data.sort((a, b) => {
+                    const da = String(qbv(a, 115) || '');
+                    const db = String(qbv(b, 115) || '');
+                    return db.localeCompare(da);
+                });
+                const now = new Date();
+                const todayStr = now.toISOString().split('T')[0];
+                let html = '';
+                sorted.forEach(task => {
+                    const tmpl = String(qbv(task, 56) || 'Unknown');
+                    const schedDate = qbv(task, 115) ? String(qbv(task, 115)) : null;
+                    const submittedDt = qbv(task, 97) ? String(qbv(task, 97)) : null;
+                    const crew = String(qbv(task, 268) || qbv(task, 197) || qbv(task, 145) || 'TBA');
+                    const status = String(qbv(task, 85) || 'Scheduled').trim();
+                    const statusLow = status.toLowerCase();
+                    const taskUrl = qbv(task, 107) ? String(qbv(task, 107)) : null;
+                    const isService = tmpl.toLowerCase().includes('service');
+                    const isOverdue = statusLow === 'overdue';
+                    const isComplete = statusLow === 'complete' || statusLow === 'site work complete';
+                    // schedDate may be ISO timestamp "2026-03-11T14:00:00Z" or plain date "2026-03-11"
+                    const dateObj = schedDate ? new Date(schedDate.includes('T') ? schedDate : schedDate + 'T12:00:00') : null;
+                    const dateStr = (dateObj && !isNaN(dateObj)) ? dateObj.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : 'No date';
+                    const dateIso = (dateObj && !isNaN(dateObj)) ? dateObj.toISOString().split('T')[0] : '';
+                    const isPast = dateIso && dateIso < todayStr;
+                    const isToday = dateIso === todayStr;
+
+                    let dotClass = 'active';
+                    if (isComplete || submittedDt) dotClass = 'completed';
+                    else if (isOverdue) dotClass = 'overdue';
+                    else if (isPast) dotClass = '';
+                    if (isService) dotClass = 'service';
+
+                    // Status pill
+                    let statusCls = 'scheduled';
+                    if (isComplete) statusCls = 'complete';
+                    else if (isOverdue) statusCls = 'overdue';
+                    else if (submittedDt) statusCls = 'submitted';
+                    else if (qbv(task, 146)) statusCls = 'enroute';
+
+                    const link = taskUrl ? ` <a href="${taskUrl}" target="_blank" style="color:var(--status-info);font-size:11px;text-decoration:none;">View &rarr;</a>` : '';
+
+                    // RTR (Real Time Review) — inline badge on the meta line
+                    const rtrStatus = String(qbv(task, 242) || '').trim();
+                    const rtrInstallStatus = String(qbv(task, 243) || '').trim();
+                    const rtrUpdatedAt = qbv(task, 248) ? String(qbv(task, 248)) : '';
+                    const rtrCrewOnSite = String(qbv(task, 258) || '').trim();
+                    const rtrReadyCount = parseInt(qbv(task, 217) || 0);
+                    let rtrPill = '';
+                    if (rtrStatus) {
+                        const rtrLow = rtrStatus.toLowerCase();
+                        const rtrDateFmt = rtrUpdatedAt ? formatDate(rtrUpdatedAt) : '';
+                        const rtrDetail = [rtrStatus, rtrDateFmt, rtrInstallStatus, (rtrCrewOnSite && rtrCrewOnSite.toLowerCase() !== 'no' ? 'Crew on site' : '')].filter(Boolean).join(' · ');
+                        const rtrEmoji = rtrLow === 'pass' ? '✅' : rtrLow === 'fail' ? '❌' : '⚠️';
+                        rtrPill = ` <span style="display:inline-block;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600;background:#f1f5f9;color:#334155;margin-left:4px;vertical-align:middle;cursor:help" title="${escapeHtml(rtrDetail)}">${rtrEmoji} RTR</span>`;
+                    } else if (rtrReadyCount > 0) {
+                        rtrPill = ` <span style="display:inline-block;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:600;background:#f1f5f9;color:#334155;margin-left:4px;vertical-align:middle">⚠️ RTR</span>`;
+                    }
+
+                    html += `<div class="qb-timeline-item ${isPast&&!isToday?'past':''} ${isToday?'today':''}">
+                        <div class="qb-timeline-dot ${dotClass}"></div>
+                        <div class="qb-timeline-info">
+                            <div class="qb-timeline-name">${isService?'<span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#8b5cf6;color:white;font-size:9px;font-weight:700;text-align:center;line-height:16px;margin-right:4px;">S</span>':''}${escapeHtml(tmpl)} <span class="qb-timeline-status ${statusCls}">${escapeHtml(status)}</span>${rtrPill}</div>
+                            <div class="qb-timeline-meta">${dateStr} &middot; ${escapeHtml(crew)}${link}</div>
+                        </div>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('[QBSkin] Error loading Arrivy timeline:', e, e.stack);
+                const c = document.getElementById('arrivyTimeline');
+                if (c) c.innerHTML = `<div class="qb-notes-placeholder">Could not load field activity<br><small style="color:#999;">${escapeHtml(e.message)}</small></div>`;
+            }
+        }
+
+        // ========================================
+        // Load Tickets
+        // ========================================
+        async function loadTickets() {
+            const container = document.getElementById('ticketsContainer');
+            const countEl = document.getElementById('ticketsCount');
+            if (!container) return;
+
+            try {
+                // Tickets table (bstdqwrkg) — FID 26=Related Project
+                // Select: 3=RID, 19=Title, 20=Description, 23=Date Created, 50=Ticket Issue, 52=Due Date,
+                //         67=Assigned To, 87=Priority, 91=Status, 100=Assigned To(user), 108=Disposition, 109=View Ticket
+                const ticketFields = [3, 19, 20, 23, 26, 50, 52, 67, 87, 91, 100, 108, 109];
+                const whereClause = `{'26'.EX.'${recordId}'}`;
+                const result = await apiQuery(QB_CONFIG.tables.tickets, ticketFields, whereClause, 50);
+
+                if (!result.data || result.data.length === 0) {
+                    container.innerHTML = '<div class="qb-notes-placeholder">No tickets for this project</div>';
+                    if (countEl) countEl.textContent = '0';
+                    return;
+                }
+
+                if (countEl) countEl.textContent = result.data.length;
+
+                // Sort: open tickets first, then by date descending
+                const sorted = result.data.sort((a, b) => {
+                    const sa = String(qbv(a, 91) || '').toLowerCase();
+                    const sb = String(qbv(b, 91) || '').toLowerCase();
+                    const closedA = sa.includes('closed') || sa.includes('complete') || sa.includes('resolved') ? 1 : 0;
+                    const closedB = sb.includes('closed') || sb.includes('complete') || sb.includes('resolved') ? 1 : 0;
+                    if (closedA !== closedB) return closedA - closedB;
+                    const da = String(qbv(a, 23) || '');
+                    const db = String(qbv(b, 23) || '');
+                    return db.localeCompare(da);
+                });
+
+                let html = '';
+                sorted.forEach(ticket => {
+                    const title = String(qbv(ticket, 19) || qbv(ticket, 50) || 'Untitled Ticket');
+                    const status = String(qbv(ticket, 91) || 'Open');
+                    const statusLow = status.toLowerCase();
+                    const priority = String(qbv(ticket, 87) || '').toLowerCase();
+                    const assignee = String(qbv(ticket, 67) || qbv(ticket, 100) || '');
+                    const dueDate = qbv(ticket, 52) ? formatDate(qbv(ticket, 52)) : '';
+                    const created = qbv(ticket, 23) ? formatDate(qbv(ticket, 23)) : '';
+                    const issue = String(qbv(ticket, 50) || '');
+                    const viewUrl = qbv(ticket, 109) ? String(qbv(ticket, 109)) : null;
+                    const disposition = String(qbv(ticket, 108) || '');
+
+                    // Priority bar color
+                    let priClass = 'none';
+                    if (priority.includes('high') || priority.includes('urgent') || priority.includes('critical')) priClass = 'high';
+                    else if (priority.includes('medium') || priority.includes('normal')) priClass = 'medium';
+                    else if (priority.includes('low')) priClass = 'low';
+
+                    // Status badge class
+                    let statusClass = 'open';
+                    if (statusLow.includes('progress') || statusLow.includes('working')) statusClass = 'in-progress';
+                    else if (statusLow.includes('closed') || statusLow.includes('complete') || statusLow.includes('resolved')) statusClass = 'closed';
+                    else if (statusLow.includes('block') || statusLow.includes('hold')) statusClass = 'blocked';
+
+                    const metaParts = [];
+                    if (issue && issue !== title) metaParts.push(issue);
+                    if (assignee) metaParts.push(assignee);
+                    if (dueDate) metaParts.push('Due: ' + dueDate);
+                    else if (created) metaParts.push(created);
+                    if (disposition) metaParts.push(disposition);
+
+                    const viewLink = viewUrl ? `<a href="${viewUrl}" target="_blank" style="font-size:11px;color:var(--status-info);text-decoration:none;margin-left:6px;">View &rarr;</a>` : '';
+
+                    html += `<div class="qb-ticket-item">
+                        <div class="qb-ticket-priority ${priClass}"></div>
+                        <div class="qb-ticket-body">
+                            <div class="qb-ticket-row1">
+                                <div class="qb-ticket-title">${escapeHtml(title)}${viewLink}</div>
+                                <span class="qb-ticket-status ${statusClass}">${escapeHtml(status)}</span>
+                            </div>
+                            <div class="qb-ticket-meta">${escapeHtml(metaParts.join(' · '))}</div>
+                        </div>
+                    </div>`;
+                });
+
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('[QBSkin] Error loading tickets:', e);
+                container.innerHTML = `<div class="qb-notes-placeholder">Could not load tickets<br><small style="color:#999;">${escapeHtml(e.message)}</small></div>`;
+            }
+        }
+
+        // ========================================
+        // Load Communications (SMS + Calls)
+        // ========================================
+        let commsData = { calls: [], texts: [], all: [] };
+
+        async function loadCommunications() {
+            const container = document.getElementById('commsContainer');
+            if (!container) return;
+
+            // Get the contact record ID from the project (FID 144)
+            const contactId = qbv(projectData, 144);
+            if (!contactId) {
+                container.innerHTML = '<div class="qb-notes-placeholder">No contact linked to this project</div>';
+                setupCommsTabs();
+                return;
+            }
+            console.log('[QBSkin] Loading comms for contact ID:', contactId);
+
+            try {
+                // Query both tables in parallel
+                // SMS table (bvjf44d7d): FID 36=Related Contact, 9=direction, 10=from_number, 11=to_number, 12=text, 13=message_status, 23=contact.name, 29=user.name, 40=event_timestamp(Date/Time)
+                const smsFields = [3, 9, 10, 11, 12, 13, 23, 29, 36, 40];
+                const smsWhere = `{'36'.EX.'${contactId}'}`;
+
+                // Call Log table (bvjf2i36u): FID 84=Related Contact, 18=direction, 19=from_number, 20=from_name, 21=to_number, 22=to_name, 16=duration, 10=call_state, 34=contact.name, 93=Event Timestamp(Date/Time), 52=transcription_text, 45=recording_url, 60=voicemail_transcription
+                const callFields = [3, 10, 16, 18, 19, 20, 21, 22, 34, 45, 52, 60, 84, 93];
+                const callWhere = `{'84'.EX.'${contactId}'}`;
+
+                const [smsResult, callResult] = await Promise.all([
+                    apiQuery(QB_CONFIG.tables.smsLog, smsFields, smsWhere, 50),
+                    apiQuery(QB_CONFIG.tables.callLog, callFields, callWhere, 50)
+                ]);
+
+                console.log('[QBSkin] SMS records:', smsResult.data?.length || 0, 'Call records:', callResult.data?.length || 0);
+
+                // Process SMS records
+                commsData.texts = (smsResult.data || []).map(rec => {
+                    const dir = String(qbv(rec, 9) || '').toLowerCase();
+                    const ts = qbv(rec, 40);  // FID 40: event_timestamp (Date/Time) — QB timestamp
+                    return {
+                        type: 'sms',
+                        direction: dir,
+                        from: String(qbv(rec, 10) || ''),
+                        to: String(qbv(rec, 11) || ''),
+                        text: String(qbv(rec, 12) || ''),
+                        status: String(qbv(rec, 13) || ''),
+                        contactName: String(qbv(rec, 23) || ''),
+                        userName: String(qbv(rec, 29) || ''),
+                        timestamp: ts,
+                        sortKey: ts || ''
+                    };
+                });
+
+                // Process Call records
+                commsData.calls = (callResult.data || []).map(rec => {
+                    const dir = String(qbv(rec, 18) || '').toLowerCase();
+                    const state = String(qbv(rec, 10) || '').toLowerCase();
+                    const dur = parseInt(qbv(rec, 16)) || 0;
+                    const ts = qbv(rec, 93); // FID 93: Event Timestamp (Date/Time) — QB timestamp
+                    const isMissed = state === 'missed' || (dur === 0 && dir === 'inbound');
+                    return {
+                        type: 'call',
+                        direction: dir,
+                        missed: isMissed,
+                        fromNumber: String(qbv(rec, 19) || ''),
+                        fromName: String(qbv(rec, 20) || ''),
+                        toNumber: String(qbv(rec, 21) || ''),
+                        toName: String(qbv(rec, 22) || ''),
+                        contactName: String(qbv(rec, 34) || ''),
+                        duration: dur,
+                        callState: state,
+                        recordingUrl: String(qbv(rec, 45) || ''),
+                        transcription: String(qbv(rec, 52) || ''),
+                        voicemail: String(qbv(rec, 60) || ''),
+                        timestamp: ts,
+                        sortKey: ts || ''
+                    };
+                });
+
+                // Merge and sort descending
+                commsData.all = [...commsData.calls, ...commsData.texts].sort((a, b) => {
+                    return String(b.sortKey).localeCompare(String(a.sortKey));
+                });
+
+                // Update tab counts
+                const tabs = document.querySelectorAll('.qb-comms-tab');
+                tabs.forEach(tab => {
+                    const t = tab.getAttribute('data-tab');
+                    let count = 0;
+                    if (t === 'all') count = commsData.all.length;
+                    else if (t === 'calls') count = commsData.calls.length;
+                    else if (t === 'texts') count = commsData.texts.length;
+                    const existing = tab.querySelector('.tab-count');
+                    if (existing) existing.textContent = count;
+                    else tab.innerHTML += ` <span class="tab-count">${count}</span>`;
+                });
+
+                renderComms('all');
+                setupCommsTabs();
+            } catch (e) {
+                console.error('[QBSkin] Error loading communications:', e);
+                container.innerHTML = `<div class="qb-notes-placeholder">Could not load communications<br><small style="color:#999;">${escapeHtml(e.message)}</small></div>`;
+            }
+        }
+
+        function setupCommsTabs() {
+            const tabs = document.querySelectorAll('.qb-comms-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    renderComms(tab.getAttribute('data-tab'));
+                });
+            });
+        }
+
+        function renderComms(filter) {
+            const container = document.getElementById('commsContainer');
+            if (!container) return;
+
+            let items = [];
+            if (filter === 'calls') items = commsData.calls.sort((a,b) => String(b.sortKey).localeCompare(String(a.sortKey)));
+            else if (filter === 'texts') items = commsData.texts.sort((a,b) => String(b.sortKey).localeCompare(String(a.sortKey)));
+            else items = commsData.all;
+
+            if (items.length === 0) {
+                const label = filter === 'all' ? 'communications' : filter;
+                container.innerHTML = `<div class="qb-notes-placeholder">No ${label} found</div>`;
+                return;
+            }
+
+            // Show max 20, with "show more" button
+            const showCount = 20;
+            const visible = items.slice(0, showCount);
+            let html = '';
+
+            visible.forEach(item => {
+                if (item.type === 'call') {
+                    html += renderCallItem(item);
+                } else {
+                    html += renderSmsItem(item);
+                }
+            });
+
+            if (items.length > showCount) {
+                html += `<div style="text-align:center;padding:8px;"><span style="font-size:12px;color:var(--text-muted);">${items.length - showCount} more not shown</span></div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function renderCallItem(c) {
+            const iconClass = c.missed ? 'call-missed' : (c.direction === 'inbound' ? 'call-in' : 'call-out');
+            const iconSvg = c.missed
+                ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.11 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+                : (c.direction === 'inbound'
+                    ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.11 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/><polyline points="16 2 16 8 22 8"/></svg>`
+                    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.11 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/><polyline points="8 22 8 16 2 16"/></svg>`
+                );
+
+            const who = c.direction === 'inbound'
+                ? (c.fromName || c.contactName || formatPhoneDisplay(c.fromNumber) || 'Unknown')
+                : (c.toName || c.contactName || formatPhoneDisplay(c.toNumber) || 'Unknown');
+
+            const dirLabel = c.missed ? 'Missed' : (c.direction === 'inbound' ? 'Incoming' : 'Outgoing');
+            const durStr = c.duration > 0 ? formatDuration(c.duration) : '';
+            const timeStr = c.timestamp ? formatCommsTime(c.timestamp) : '';
+
+            let badges = '';
+            if (durStr) badges += `<span class="qb-comms-badge duration">${durStr}</span>`;
+            if (c.voicemail) badges += `<span class="qb-comms-badge voicemail">VM</span>`;
+            if (c.recordingUrl) badges += `<a href="${c.recordingUrl}" target="_blank" class="qb-comms-badge recording" style="text-decoration:none;">REC</a>`;
+
+            let detail = `<span>${dirLabel}</span>${badges}`;
+            if (c.voicemail) {
+                detail += `<div class="msg-preview" style="margin-top:3px;font-style:italic;">${escapeHtml(c.voicemail.substring(0, 120))}${c.voicemail.length > 120 ? '...' : ''}</div>`;
+            } else if (c.transcription) {
+                detail += `<div class="msg-preview" style="margin-top:3px;font-style:italic;">${escapeHtml(c.transcription.substring(0, 120))}${c.transcription.length > 120 ? '...' : ''}</div>`;
+            }
+
+            return `<div class="qb-comms-item">
+                <div class="qb-comms-icon ${iconClass}">${iconSvg}</div>
+                <div class="qb-comms-body">
+                    <div class="qb-comms-row1">
+                        <div class="qb-comms-who">${escapeHtml(who)}</div>
+                        <div class="qb-comms-when">${timeStr}</div>
+                    </div>
+                    <div class="qb-comms-detail">${detail}</div>
+                </div>
+            </div>`;
+        }
+
+        function renderSmsItem(s) {
+            const iconClass = s.direction === 'inbound' ? 'sms-in' : 'sms-out';
+            const iconSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+
+            // For inbound: show who sent it (contact or user name, fallback to from #)
+            // For outbound: show who it was sent TO (contact name, fallback to to #)
+            const who = s.direction === 'inbound'
+                ? (s.contactName || s.userName || formatPhoneDisplay(s.from) || 'Unknown')
+                : (s.contactName || formatPhoneDisplay(s.to) || 'Unknown');
+            // Show the internal user who sent/received on outbound/inbound
+            const byLine = s.direction === 'inbound' ? '' : (s.userName ? ` · by ${s.userName}` : '');
+
+            const dirLabel = s.direction === 'inbound' ? 'Received' : 'Sent';
+            const timeStr = s.timestamp ? formatCommsTime(s.timestamp) : '';
+            const isLong = s.text && s.text.length > 80;
+            const preview = s.text ? s.text.substring(0, 80) + (isLong ? '...' : '') : dirLabel;
+            const uid = 'sms_' + Math.random().toString(36).substr(2, 6);
+
+            // Status badge — yellow for pending, red for failed/error, hidden for delivered/sent
+            let statusBadge = '';
+            if (s.status) {
+                const stLow = s.status.toLowerCase();
+                if (stLow === 'pending' || stLow === 'queued') {
+                    statusBadge = `<span class="qb-comms-badge" style="background:#fef3c7;color:#92400e;font-size:10px;">${escapeHtml(s.status)}</span>`;
+                } else if (stLow !== 'delivered' && stLow !== 'sent' && stLow !== '') {
+                    statusBadge = `<span class="qb-comms-badge" style="background:#fef2f2;color:#dc2626;font-size:10px;">${escapeHtml(s.status)}</span>`;
+                }
+            }
+
+            // Full message (hidden by default, toggled on tap)
+            const fullMsg = isLong ? `<div id="${uid}" style="display:none;margin-top:4px;padding:8px;background:var(--warm-lighter);border-radius:6px;font-size:12px;line-height:1.5;color:var(--text);white-space:pre-wrap;word-break:break-word;">${escapeHtml(s.text)}</div>` : '';
+            const tapHandler = isLong ? `onclick="var el=document.getElementById('${uid}');el.style.display=el.style.display==='none'?'block':'none';"` : '';
+            const tapHint = isLong ? ' style="cursor:pointer;"' : '';
+
+            return `<div class="qb-comms-item"${tapHint} ${tapHandler}>
+                <div class="qb-comms-icon ${iconClass}">${iconSvg}</div>
+                <div class="qb-comms-body">
+                    <div class="qb-comms-row1">
+                        <div class="qb-comms-who">${escapeHtml(who)} <span style="font-weight:400;font-size:11px;color:var(--text-muted);">${dirLabel}${byLine}</span>${statusBadge}</div>
+                        <div class="qb-comms-when">${timeStr}</div>
+                    </div>
+                    <div class="qb-comms-detail"><div class="msg-preview">${escapeHtml(preview)}</div></div>
+                    ${fullMsg}
+                </div>
+            </div>`;
+        }
+
+        function formatPhoneDisplay(num) {
+            if (!num) return '';
+            const clean = num.replace(/\D/g, '');
+            if (clean.length === 10) return `(${clean.slice(0,3)}) ${clean.slice(3,6)}-${clean.slice(6)}`;
+            if (clean.length === 11 && clean[0] === '1') return `(${clean.slice(1,4)}) ${clean.slice(4,7)}-${clean.slice(7)}`;
+            return num;
+        }
+
+        function formatDuration(rawDuration) {
+            // Dialpad duration can be in seconds or milliseconds
+            // If value > 86400 (24 hours in seconds), assume milliseconds
+            let seconds = Math.round(rawDuration > 86400 ? rawDuration / 1000 : rawDuration);
+            if (seconds <= 0) return '0s';
+            if (seconds < 60) return `${seconds}s`;
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            if (m >= 60) {
+                const h = Math.floor(m / 60);
+                const rm = m % 60;
+                return rm > 0 ? `${h}h ${rm}m` : `${h}h`;
+            }
+            return s > 0 ? `${m}m ${s}s` : `${m}m`;
+        }
+
+        function formatCommsTime(ts) {
+            if (!ts) return '';
+            try {
+                const d = new Date(typeof ts === 'string' && ts.includes('T') ? ts : ts + 'T12:00:00');
+                if (isNaN(d)) return '';
+                const now = new Date();
+                const diffMs = now - d;
+                const diffDays = Math.floor(diffMs / 86400000);
+                if (diffDays === 0) {
+                    return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                } else if (diffDays === 1) {
+                    return 'Yesterday';
+                } else if (diffDays < 7) {
+                    return d.toLocaleDateString('en-US', { weekday: 'short' });
+                } else {
+                    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                }
+            } catch (e) {
+                return '';
+            }
+        }
+
+        // ========================================
+        // Note Modal Handlers
+        // ========================================
+        function toggleNoteForm() {
+            const form = document.getElementById('noteForm');
+            const btn = document.getElementById('addNoteBtn');
+            const isOpen = form.classList.contains('open');
+            if (isOpen) {
+                closeNoteForm();
+            } else {
+                form.classList.add('open');
+                btn.style.display = 'none';
+                // Focus the textarea after the animation
+                setTimeout(() => document.getElementById('noteText').focus(), 100);
+            }
+        }
+
+        function closeNoteForm() {
+            const form = document.getElementById('noteForm');
+            const btn = document.getElementById('addNoteBtn');
+            form.classList.remove('open');
+            btn.style.display = '';
+            // Reset form fields
+            document.getElementById('noteText').value = '';
+            document.getElementById('noteCategory').value = '';
+            document.getElementById('noteType').value = '';
+        }
+
+        async function submitNote() {
+            const noteText = document.getElementById('noteText').value.trim();
+            if (!noteText) {
+                document.getElementById('noteText').style.borderColor = '#ef4444';
+                setTimeout(() => { document.getElementById('noteText').style.borderColor = ''; }, 1500);
+                return;
+            }
+
+            const category = document.getElementById('noteCategory').value || 'General';
+            const type = document.getElementById('noteType').value || '';
+            const saveBtn = document.getElementById('noteSaveBtn');
+
+            // Disable button while saving
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            try {
+                // Notes table (bsb6bqt3b) field IDs:
+                // 13 = Related Project, 6 = Note, 7 = Category, 8 = Date, 38 = Type
+                const noteData = {
+                    "13": { value: recordId },
+                    "6": { value: noteText },
+                    "7": { value: category },
+                    "8": { value: new Date().toISOString().split('T')[0] }
+                };
+                if (type) noteData["38"] = { value: type };
+
+                await apiUpsert(QB_CONFIG.tables.notes, noteData);
+                closeNoteForm();
+                // Refresh notes list in-place (no page reload)
+                await loadExistingNotes();
+            } catch (err) {
+                console.error('[QBSkin] Error saving note:', err);
+                saveBtn.textContent = 'Error — Retry';
+            } finally {
+                saveBtn.disabled = false;
+                if (saveBtn.textContent === 'Saving...') saveBtn.textContent = 'Save Note';
+            }
+        }
+
+        // ========================================
+        // Status Dropdown
+        // ========================================
+        function openStatusDropdown(e) {
+            const statusOptions = ['Active', 'Rejected', 'Finance Hold', 'Pending Cancel', 'Cancel'];
+            const btn = e.target.closest('button');
+            const rect = btn.getBoundingClientRect();
+
+            let dropdown = document.getElementById('statusDropdown');
+            if (!dropdown) {
+                dropdown = document.createElement('div');
+                dropdown.id = 'statusDropdown';
+                dropdown.className = 'qb-status-dropdown';
+                document.body.appendChild(dropdown);
+            }
+
+            dropdown.innerHTML = statusOptions.map(opt => `
+                <div class="qb-status-option" data-status="${opt}">${escapeHtml(opt)}</div>
+            `).join('');
+
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = (rect.top - 10) + 'px';
+            dropdown.style.left = (rect.left - 80) + 'px';
+            dropdown.style.display = 'block';
+
+            // Attach click handlers
+            dropdown.querySelectorAll('.qb-status-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    const newStatus = opt.getAttribute('data-status');
+                    updateProjectStatus(newStatus);
+                    dropdown.style.display = 'none';
+                });
+            });
+
+            // Close on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#statusDropdown') && !e.target.closest('#updateStatusBtn')) {
+                    dropdown.style.display = 'none';
+                }
+            }, { once: true });
+        }
+
+        function updateProjectStatus(newStatus) {
+            // Update using correct field IDs - Status field is 255
+            const statusData = {
+                "3": { value: recordId },
+                "255": { value: newStatus }  // Status field ID is 255
+            };
+
+            console.log('Updating status to:', newStatus);
+
+            // Implement actual upsert
+            apiUpsert(QB_CONFIG.tables.projects, statusData).then(() => {
+                alert(`Status updated to: ${newStatus}`);
+                location.reload();
+            }).catch(err => {
+                console.error('Error updating status:', err);
+                alert('Failed to update status');
+            });
+        }
+
+
+        // ========================================
+        // HTML Escape (Security)
+        // ========================================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.toString().replace(/[&<>"']/g, char => map[char]);
+        }
+
+        // ========================================
+        // Global Search (on Project Detail page)
+        // ========================================
+        let projectSearchOpen = false;
+        let projectSearchTimer = null;
+
+        function toggleProjectSearch() {
+            projectSearchOpen = !projectSearchOpen;
+            const bar = document.getElementById('projectSearchBar');
+            const results = document.getElementById('projectSearchResults');
+            const hdr = document.querySelector('.qb-header');
+            if (projectSearchOpen) {
+                // Measure actual header height at runtime (handles all device sizes correctly)
+                if (hdr) bar.style.top = hdr.offsetHeight + 'px';
+                bar.classList.add('open');
+                document.getElementById('projectSearchInput').focus();
+            } else {
+                bar.classList.remove('open');
+                results.style.display = 'none';
+                document.getElementById('projectSearchInput').value = '';
+            }
+        }
+
+        function handleProjectSearch(val) {
+            clearTimeout(projectSearchTimer);
+            const q = val.trim();
+            if (q.length < 2) {
+                document.getElementById('projectSearchResults').style.display = 'none';
+                return;
+            }
+            projectSearchTimer = setTimeout(() => doProjectSearch(q), 400);
+        }
+
+        async function doProjectSearch(query) {
+            const container = document.getElementById('projectSearchResults');
+            container.style.display = 'block';
+            container.innerHTML = '<div class="sr-msg">Searching all projects...</div>';
+            try {
+                const q = query.replace(/'/g, "\\'");
+                // Confirmed FIDs from Projects table
+                const fullNameFid = 367; // Residential Client - Full Name
+                const addressFid = 146;  // Customer Address
+                const phoneFid = 148;    // Residential Client - Mobile Phone
+                const emailFid = 149;    // Residential Client - Email
+                const statusFid = 255;   // Status
+                const kwFid = 13;        // System Size(kW)
+                const stateFid = 189;    // Customer - State
+                const sel = [3, fullNameFid, addressFid, phoneFid, emailFid, statusFid, kwFid, stateFid];
+
+                // Infix OR syntax for CT operator
+                const where = `{${fullNameFid}.CT.'${q}'}OR{${addressFid}.CT.'${q}'}OR{${phoneFid}.CT.'${q}'}`;
+                const result = await apiQuery(QB_CONFIG.tables.projects, sel, where, 30);
+                const data = result.data || [];
+
+                if (!data.length) {
+                    container.innerHTML = '<div class="sr-msg">No projects found for "' + escapeHtml(query) + '"</div>';
+                    return;
+                }
+
+                container.innerHTML = data.map(r => {
+                    const rid = qbv(r, 3);
+                    const name = qbv(r, fullNameFid) || 'Unknown';
+                    const address = qbv(r, addressFid) || '';
+                    const phone = qbv(r, phoneFid) || '';
+                    const email = qbv(r, emailFid) || '';
+                    const status = qbv(r, statusFid) || '';
+                    const kw = parseFloat(qbv(r, kwFid) || 0);
+                    const state = qbv(r, stateFid) || '';
+                    const sub = [kw ? kw.toFixed(1) + ' kW' : '', address, state].filter(Boolean).join(' \u00b7 ');
+                    const contact = [phone, email].filter(Boolean).join(' \u00b7 ');
+                    const detailUrl = window.location.pathname + '?a=dbpage&pagename=qb-skin-project-detail.html#rid=' + encodeURIComponent(rid);
+                    return '<div class="sr-card" onclick="window.location.href=\'' + detailUrl + '\';window.location.reload();">' +
+                        '<div class="sr-name">' + escapeHtml(name) + '<span class="sr-status">' + escapeHtml(status) + '</span></div>' +
+                        (sub ? '<div class="sr-sub">' + escapeHtml(sub) + '</div>' : '') +
+                        (contact ? '<div class="sr-sub" style="color:#94a3b8;font-size:11px">' + escapeHtml(contact) + '</div>' : '') +
+                        '</div>';
+                }).join('');
+            } catch (err) {
+                console.error('[QBSkin] Project search error:', err);
+                container.innerHTML = '<div class="sr-msg">Search failed: ' + escapeHtml(err.message) + '</div>';
+            }
+        }
+
+        // ========================================
+        // Initialize on Page Load
+        // ========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Back button
+            document.getElementById('backBtn').addEventListener('click', () => {
+                window.location.href = 'https://kin.quickbase.com/db/br9kwm8bk?a=dbpage&pagename=cc-quick-glance.html';
+            });
+
+            // Load project data
+            loadProjectDetail();
+        });
+    </script>
+</body>
+</html>
